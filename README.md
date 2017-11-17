@@ -10,12 +10,16 @@ This README would normally document whatever steps are necessary to get your app
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* Cell 1: Grid cell (5 fields)
+* Cell 2: Grid cell (3 fields)
+* Cell 3: MM
+* Cell 4: Grid and multimodal place cells 
+* Cell 5: MM
+* Cell 6: MM 
+* Cell 7: multimodel place cells 
+* Cell 8: Place cell (with field in middle)
+* Cell 9: Place cell
+* Cell 10: multimodel place cells 
 
 ### Contribution guidelines ###
 
