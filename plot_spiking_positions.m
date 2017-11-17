@@ -25,7 +25,7 @@ plot(x,y,xs,ys,'r.');
 % making it look pretty and readable
 title([num2str(i) ': Spiking Activity as a Function of Position'])
 xlabel('Normalized x position'); ylabel('Normalized y position');
-legend('Path taken','Position at spike','location','best')
+% legend('Path taken','Position at spike','location','best')
 set(gca,'fontsize',14)
 
 end
