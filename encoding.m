@@ -5,23 +5,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% load data & generate variables
 load('train.mat')
-[ISI,XLocAtSpikes,YLocAtSpikes] = generate_new_variables(x,y,spikes);
-% generate velocities?
+[ISI,XLocAtSpikes,YLocAtSpikes] = generate_new_variables(xN,yN,spikes_binned);
+Vx = diff(xN)*1000;
+Vy = diff(yN)*1000;
 % generate directions?
 
+ISI_threshold = 550;
 %%%% notes %%%%
 % more variables could be useful but also means more to present
 
 %% plotting raw data
 % plot_spiking_times
 plot_spiking_positions(xN,yN,XLocAtSpikes,YLocAtSpikes);
+ISIs = plot_ISIs(spikes_binned,ISI_threshold);
+
 % plot_spiking_velocities maybe?
 % plot_spiking_directions maybe?
 
 %% classifying cells
+% This needs to be automated, and it turns out that is a hard problem (at
+% least I struggled with it -Simon)
+
 % place
 % grid
-% multimodal (?)
+% multimodal (?) (I think this is where the history dependence could prove
+% to be a helpful covariate -Simon)
 
 %% encoding data
 % encode_place
