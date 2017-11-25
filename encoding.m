@@ -17,7 +17,7 @@ ISI_threshold = 550;
 %% plotting raw data
 % plot_spiking_times
 plot_spiking_positions(xN,yN,XLocAtSpikes,YLocAtSpikes);
-ISIs = plot_ISIs(spikes_binned,ISI_threshold);
+ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 
 % plot_spiking_velocities maybe?
 % plot_spiking_directions maybe?
