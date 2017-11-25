@@ -8,10 +8,11 @@ function ISIs = plot_ISIs(spikes,threshold)
 n = size(spikes,2);
 
 ISIs = cell(n,1);
+figure;
 for i = 1:n,
     ISIs{i} = diff(find(spikes(:,i)));
     pISI = ISIs{i}(ISIs{i}<=threshold); %Throw out ISIs that are too large (for plotting only)
-    figure; grid on; hold on;
+    subplot(2,5,i); grid on; hold on;
     histogram(pISI,'BinWidth',10);
     xlabel('Interspike Interval (ms)');
     ylabel('Number');
