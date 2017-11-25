@@ -17,8 +17,8 @@ These are based on spike positions. One thing to consider is how often the rat w
 * Cell 3: MM (multimodal place cells)
 * Cell 4: Grid and MM
 * Cell 5: MM
-* Cell 6: MM 
-* Cell 7: MM
+* Cell 6: Place + border conjuctive cell
+* Cell 7: Place + border conjunctive cell
 * Cell 8: Place cell (with field in middle)
 * Cell 9: Place cell
 * Cell 10: MM
