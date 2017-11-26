@@ -1,3 +1,11 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% plot_ks.m
+% -------------------------------------------------------------------------
+% plot_ks takes in the spikes of a single neuron (spikes_binned) and
+% several models (lambdaEsts) and plot the Kolmogorov-Smirnov plots and
+% computes the KS static for each of them.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
 function plot_ks(spikes_binned, lambdaEsts)
 
 figure(); clf; hold on;
@@ -24,10 +32,9 @@ for i=1:numel(lambdaEsts)
     N = length(KSSorted);
 
     % plot KS plots
+    ks_stat = max(abs(KSSorted - ([1:N]-.5)/N));
     h(i) = plot(([1:N]-.5)/N, KSSorted,...
-            'DisplayName', ['Model' num2str(i)]);
-
-    ks_stat = max(abs(KSSorted - ([1:N]-.5)/N))
+            'DisplayName', ['KS = ' num2str(ks_stat)]);
     
 end
 
