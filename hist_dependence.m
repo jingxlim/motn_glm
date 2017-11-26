@@ -16,10 +16,10 @@
 
 function covariate_matrix = hist_dependence(num_backsteps,spikes,varargin)
 
-n_cov = length(varargin); %Number of non-spike covariates
-tot_cov = n_cov + num_backsteps; %Total number of covariates
+n_cov = length(varargin); % Number of non-spike covariates
+tot_cov = n_cov + num_backsteps; % Total number of covariates
 
-%Preallocate for speed
+% Preallocate for speed
 covariate_matrix = NaN(length(varargin{1})-num_backsteps,tot_cov);
 
 % Add non-spike covariates to matrix

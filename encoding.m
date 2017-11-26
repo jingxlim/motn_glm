@@ -41,14 +41,40 @@ ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 % encode_mm
 % ^ idk if those are functions. read below
 
-[b,dev,stats] = glmfit([xN yN xN.^2 yN.^2],spikes_binned(:,8),'poisson');
-lambdaEst{1} = exp(b(1)+b(2)*xN+ b(3)*yN+b(4)*xN.^2+ b(5)*yN.^2);
-[b,dev,stats] = glmfit([xN yN xN.^2 yN.^2 xN.*yN],spikes_binned(:,8),'poisson');
-lambdaEst{2} = exp(b(1)+b(2)*xN+ b(3)*yN+b(4)*xN.^2+ b(5)*yN.^2+b(6)*xN.*yN);
-[b,dev,stats] = glmfit([xN yN],spikes_binned(:,8),'poisson');
-lambdaEst{3} = exp(b(1)+b(2)*xN+ b(3)*yN);
-% plot_ks(spikes_binned(:,8),lambdaEst);
-plot_ks(spikes_binned(:,8),lambdaEst);
+for i=6:8
+    disp(['Working on neuron ' num2str(i) ' ...'])
+    spikes = spikes_binned(:,i);
+    
+    % DEFINE MODELS    
+    % Model 1
+    [b,dev,stats] = glmfit([xN yN xN.^2 yN.^2],spikes,'poisson');
+    lambdaEst{1} = exp(b(1)+b(2)*xN+ b(3)*yN+b(4)*xN.^2+ b(5)*yN.^2);
+    spikess{1} = spikes;
+    % Model 2
+    [b,dev,stats] = glmfit([xN yN xN.^2 yN.^2 xN.*yN],spikes,'poisson');
+    lambdaEst{2} = exp(b(1)+b(2)*xN+ b(3)*yN+b(4)*xN.^2+ b(5)*yN.^2+b(6)*xN.*yN);
+    spikess{2} = spikes;
+    % Model 3
+    [b,dev,stats] = glmfit([xN yN],spikes,'poisson');
+    lambdaEst{3} = exp(b(1)+b(2)*xN+ b(3)*yN);
+    spikess{3} = spikes;
+    % Model 4: history dependence
+    hist = 10;
+    spikes_m4 = spikes(hist+1:end);
+    covar_m = hist_dependence(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
+    [b,dev,stats] = glmfit(covar_m,spikes_m4,'poisson');
+    lambdaEst{4} = exp(b(1)+b(2)*covar_m(:,1)+ b(3)*covar_m(:,2)+...
+                       b(4)*covar_m(:,3)+b(5)*covar_m(:,4)+...
+                       b(6)*covar_m(:,5)+b(7)*covar_m(:,6)+...
+                       b(8)*covar_m(:,7)+b(9)*covar_m(:,8)+...
+                       b(10)*covar_m(:,9)+b(11)*covar_m(:,10)+...
+                       b(12)*covar_m(:,11)+b(13)*covar_m(:,12)+...
+                       b(14)*covar_m(:,13)+b(15)*covar_m(:,14)+...
+                       b(16)*covar_m(:,15));
+    spikess{4} = spikes_m4;
+    
+    plot_ks(spikess,lambdaEst);
+end
 
 %%%% notes %%%%
 % what needs to happen

@@ -6,22 +6,24 @@
 % computes the KS static for each of them.
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-function plot_ks(spikes_binned, lambdaEsts)
+function plot_ks(spikess, lambdaEsts)
 
 figure(); clf; hold on;
 h = [];
 
 for i=1:numel(lambdaEsts)
+    disp(['Model: ' num2str(i)])
     
     lambdaEst = lambdaEsts{i};
+    spikes = spikess{i};
     timestep = 1;
     lambdaInt = 0;
     j = 0;
     % KS = [];
 
-    for t=1:length(spikes_binned)
+    for t=1:length(spikes)
         lambdaInt = lambdaInt + lambdaEst(t)*timestep;
-        if (spikes_binned(t))
+        if (spikes(t))
             j = j + 1;
             KS(j) = 1-exp(-lambdaInt);
             lambdaInt = 0;
@@ -29,7 +31,7 @@ for i=1:numel(lambdaEsts)
     end
 
     KSSorted = sort(KS);
-    N = length(KSSorted);
+    N = length(KSSorted)
 
     % plot KS plots
     ks_stat = max(abs(KSSorted - ([1:N]-.5)/N));
