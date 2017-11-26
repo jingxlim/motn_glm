@@ -3,11 +3,15 @@
 % Project 2
 % Group: Jingxuan Lim, Simon Orozco, Seony Han
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% start anew
+clear all; % clear previous variables
+close all; % close previous plots
+
 %% load data & generate variables
+
 load('train.mat')
-[ISI,XLocAtSpikes,YLocAtSpikes] = generate_new_variables(xN,yN,spikes_binned);
-Vx = diff(xN)*1000;
-Vy = diff(yN)*1000;
+[ISI,XLocAtSpikes,YLocAtSpikes,Vx,Vy,dir] = generate_new_variables(xN,yN,spikes_binned);
 % generate directions?
 
 ISI_threshold = 550;
@@ -16,7 +20,7 @@ ISI_threshold = 550;
 
 %% plotting raw data
 % plot_spiking_times
-plot_spiking_positions(xN,yN,XLocAtSpikes,YLocAtSpikes);
+plot_spiking_positions(xN,yN,XLocAtSpikes,YLocAtSpikes,'subplot');
 ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 
 % plot_spiking_velocities maybe?
