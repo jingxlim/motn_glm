@@ -9,7 +9,7 @@ function ISIs = plot_ISIs(spikes,threshold,binwidth)
 n = size(spikes,2);
 
 ISIs = cell(n,1);
-figure;
+figure('units','normalized','outerposition',[0 0.035 1 0.92]); 
 
 for i = 1:n,
     
@@ -19,9 +19,10 @@ for i = 1:n,
     histogram(pISI,'BinWidth',binwidth);
     xlabel('Interspike Interval (ms)');
     ylabel('Number');
-    title(strcat('Distribution of Interspike Intervals for neuron: ',num2str(i)));    
+    title(['Neuron: ' num2str(i)]);
     
 end
+suptitle('Distribution of Interspike Intervals');
 end
 
 
