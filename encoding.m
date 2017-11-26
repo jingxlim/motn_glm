@@ -5,9 +5,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% load data & generate variables
 load('train.mat')
-[ISI,XLocAtSpikes,YLocAtSpikes] = generate_new_variables(xN,yN,spikes_binned);
-Vx = diff(xN)*1000;
-Vy = diff(yN)*1000;
+[ISI,XLocAtSpikes,YLocAtSpikes,Vx,Vy,dir] = generate_new_variables(xN,yN,spikes_binned);
 % generate directions?
 
 ISI_threshold = 550;
