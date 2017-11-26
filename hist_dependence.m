@@ -20,7 +20,7 @@ n_cov = length(varargin); %Number of non-spike covariates
 tot_cov = n_cov + num_backsteps; %Total number of covariates
 
 %Preallocate for speed
-covariate_matrix = NaN(length(varargin{1}),tot_cov);
+covariate_matrix = NaN(length(varargin{1})-num_backsteps,tot_cov);
 
 % Add non-spike covariates to matrix
 for i = 1:n_cov
@@ -29,7 +29,7 @@ end
 
 % Add spike history dependent covariates to matrix
 for n = 1:num_backsteps
-    covariate_matrix(:,i+n) = spikes((num_backsteps-(n-1)):end-(n-1));
+    covariate_matrix(:,i+n) = spikes((num_backsteps+1-(n-1)):end-(n-1));
 end
 
 end
