@@ -20,25 +20,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [cov,aic,ks] = multimodal(hist,spikes,xN,yN)
 %% covariates
-% variables after hist interval
-xN = xN(hist+1:end);
-yN = yN(hist+1:end);
-
-% covariates w/history dependence
 cov = [xN yN xN.^2 yN.^2 xN.*yN];
 cov_matrix = hist_dependence(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
-% cov_matrix = hist_dependence(hist,spikes,xN',yN',(xN.^2)',(yN.^2)',(xN.*yN)');
 
 %% glm
-[b,dev,stats] = glmfit(cov_matrix,spikes,'poisson');
+[b,dev,stats] = glmfit(cov_matrix,spikes(hist+1:end),'poisson');
 
 %% analysis
 % AIC: Akaike Information Criterion
 aic = dev+2*length(b);
 
 % K-S
-cov = [1 cov];
-lambdaEst = exp(sum(b.*cov));               
+cov_matrix = [ones(size(cov_matrix,1),1) cov_matrix];
+lambdaEst = exp(sum(b.*cov_matrix));
+% lambdaEst = zeros(
+% ^ I think this needs to be in a loop
 
 timestep = 1;
 lambdaInt = 0;
