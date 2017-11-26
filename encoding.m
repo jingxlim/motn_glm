@@ -41,6 +41,15 @@ ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 % encode_mm
 % ^ idk if those are functions. read below
 
+[b,dev,stats] = glmfit([xN yN xN.^2 yN.^2],spikes_binned(:,8),'poisson');
+lambdaEst{1} = exp(b(1)+b(2)*xN+ b(3)*yN+b(4)*xN.^2+ b(5)*yN.^2);
+[b,dev,stats] = glmfit([xN yN xN.^2 yN.^2 xN.*yN],spikes_binned(:,8),'poisson');
+lambdaEst{2} = exp(b(1)+b(2)*xN+ b(3)*yN+b(4)*xN.^2+ b(5)*yN.^2+b(6)*xN.*yN);
+[b,dev,stats] = glmfit([xN yN],spikes_binned(:,8),'poisson');
+lambdaEst{3} = exp(b(1)+b(2)*xN+ b(3)*yN);
+% plot_ks(spikes_binned(:,8),lambdaEst);
+plot_ks(spikes_binned(:,8),lambdaEst);
+
 %%%% notes %%%%
 % what needs to happen
 %   - glmfit (diff covariates for each cell group)

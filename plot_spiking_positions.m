@@ -44,7 +44,7 @@ elseif strcmp(p.Results.type,'subplot')
         plot(xN,yN,XLocAtSpikes{i},YLocAtSpikes{i},'r.');
         
         % make pretty
-        title(['Neuron: ' num2str(i)])
+        title(['Neuron ' num2str(i)])
         xlabel('Normalized x position'); ylabel('Normalized y position');
         pbaspect([1 1 1]);
     end

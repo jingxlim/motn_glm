@@ -19,7 +19,7 @@ for i = 1:n,
     histogram(pISI,'BinWidth',binwidth);
     xlabel('Interspike Interval (ms)');
     ylabel('Number');
-    title(['Neuron: ' num2str(i)]);
+    title(['Neuron ' num2str(i)]);
     
 end
 suptitle('Distribution of Interspike Intervals');
