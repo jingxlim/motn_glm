@@ -17,11 +17,15 @@
 
 function lambda = gen_lambda(b, covar_m)
 
-for i=1:size(covar_m1,2)
-   loglambda = b(i+1).*covar_m(i);
+% preallocate for speed
+loglambda = zeros(size(covar_m,1),1);
+
+% add the fudge factor
+loglambda = loglambda + b(1);
+
+for i=1:size(covar_m,2)
+   loglambda = loglambda + b(i+1)*covar_m(:,i);
 end
 
-log_lambda = log_lambda + b(0);
-
-lambda = exp(log_lambda);
+lambda = exp(loglambda);
 end

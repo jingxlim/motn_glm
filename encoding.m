@@ -40,43 +40,39 @@ ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 % encode_grid
 % encode_mm
 % ^ idk if those are functions. read below
+clear spikess
+clear lambdaEst
 
-for i=6:8
+h = waitbar(0,'Please wait...');
+for i=1:size(spikes_binned,2)  % iterate through all the neurons
+    
     disp(['Working on neuron ' num2str(i) ' ...'])
     spikes = spikes_binned(:,i);
     
-    % DEFINE MODELS    
+    % DEFINE MODELS
     % Model 1
-    covar_m1 = [xN yN xN.^2 yN.^2 xN.*yN];
-    [b,dev,stats] = glmfit(covar_m1,spikes,'poisson');
-    lambdaEst{1} = exp(b(1)+b(2)*covar_m1(:,1)+ b(3)*covar_m1(:,2)+...
-                       b(4)*covar_m1(:,3)+ b(5)*covar_m1(:,4)+...
-                       b(6)*covar_m1(:,5));
+    covar_m1 = [xN yN xN.^2 yN.^2];
+    [b1,dev1,stats1] = glmfit(covar_m1,spikes,'poisson');
+    lambdaEst{1} = gen_lambda(b1,covar_m1);
     spikess{1} = spikes;
     % Model 2
-    [b,dev,stats] = glmfit([xN yN xN.^2 yN.^2 xN.*yN],spikes,'poisson');
-    lambdaEst{2} = exp(b(1)+b(2)*xN+ b(3)*yN+b(4)*xN.^2+ b(5)*yN.^2+b(6).*xN.*yN);
+    covar_m2 = [xN yN xN.^2 yN.^2 xN.*yN];
+    [b2,dev2,stats2] = glmfit(covar_m2,spikes,'poisson');
+    lambdaEst{2} = gen_lambda(b2,covar_m2);
     spikess{2} = spikes;
-    % Model 3
-    [b,dev,stats] = glmfit([xN yN],spikes,'poisson');
-    lambdaEst{3} = exp(b(1)+b(2)*xN+ b(3)*yN);
-    spikess{3} = spikes;
-    % Model 4: history dependence
-%     hist = 10;
-%     spikes_m4 = spikes(hist+1:end);
-%     covar_m = hist_dependence(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
-%     [b,dev,stats] = glmfit(covar_m,spikes_m4,'poisson');
-%     lambdaEst{4} = exp(b(1)+b(2)*covar_m(:,1)+ b(3)*covar_m(:,2)+...
-%                        b(4)*covar_m(:,3)+b(5)*covar_m(:,4)+...
-%                        b(6)*covar_m(:,5)+b(7)*covar_m(:,6)+...
-%                        b(8)*covar_m(:,7)+b(9)*covar_m(:,8)+...
-%                        b(10)*covar_m(:,9)+b(11)*covar_m(:,10)+...
-%                        b(12)*covar_m(:,11)+b(13)*covar_m(:,12)+...
-%                        b(14)*covar_m(:,13)+b(15)*covar_m(:,14)+...
-%                        b(16)*covar_m(:,15));
-%     spikess{4} = spikes_m4;
+    % Model 3: history dependence
+    hist = 120;
+    spikes_m3 = spikes(hist+1:end);
+    covar_m = hist_dependence(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
+    [b3,dev3,stats3] = glmfit(covar_m,spikes_m3,'poisson');
+    lambdaEst{3} = gen_lambda(b3,covar_m3);
+    spikess{3} = spikes_m3;
     
     plot_ks(spikess,lambdaEst);
+    cur_title = get(gca, 'Title');
+    title([cur_title.String ': neuron ' num2str(i)]);
+    
+    waitbar(i/size(spikes_binned,2),h)
 end
 
 %%%% notes %%%%
