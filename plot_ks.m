@@ -1,9 +1,20 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % plot_ks.m
 % -------------------------------------------------------------------------
-% plot_ks takes in the spikes of a single neuron (spikes_binned) and
-% several models (lambdaEsts) and plot the Kolmogorov-Smirnov plots and
-% computes the KS static for each of them.
+%
+% This function takes evaluates the goodness of fit of one or more models
+% to the spikes of a single neuron by using the Kolmogorov-Smirnov plot and
+% computing the KS static.
+%
+% Inputs:    spikess - a cell array of the binned spikes of a single neuron
+%                      corresponding to the conditional intensity at each
+%                      timestep
+%         lambdaEsts - a cell array of the conditional intensity at each
+%                      timestep
+%
+% Outputs: None
+%
+% Function by: Lim Jing Xuan
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
 function plot_ks(spikess, lambdaEsts)
