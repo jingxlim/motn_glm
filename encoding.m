@@ -5,7 +5,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% start anew
-clear all; % clear previous variables
+clearvars; % clear previous variables
 close all; % close previous plots
 
 %% load data & generate variables
@@ -80,7 +80,7 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
 
     % compute lambda for each point on this grid using the GLM model
     lambda3 = lambdaEst{3};
-    lambda3(find(x_new.^2 + y_new.^2 > 1))=nan;
+    lambda3(x_new.^2 + y_new.^2 > 1)=nan;
 
     % plot lambda as a function position over this grid
     h_mesh = mesh(x_new,y_new,lambda3,'AlphaData',0);
@@ -92,8 +92,8 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     
     % plot betas
     subplot(1,2,2); hold on;
-    for i=1:numel(b3)
-        plot(i,b3(i),'*','DisplayName',num2str(stats3.p(i)));
+    for n=1:numel(b3)
+        plot(n,b3(n),'*','DisplayName',num2str(stats3.p(n)));
     end
     legend('show','Location','bestoutside')
     errorbar(b3,2*stats3.se);
