@@ -83,7 +83,7 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     lambda3(find(x_new.^2 + y_new.^2 > 1))=nan;
 
     % plot lambda as a function position over this grid
-    h_mesh = mesh(x_new,y_new,lambda,'AlphaData',0);
+    h_mesh = mesh(x_new,y_new,lambda3,'AlphaData',0);
     get(h_mesh,'AlphaData');
     set(h_mesh,'AlphaData',0);
     hold on;
@@ -93,7 +93,7 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     % plot betas
     subplot(1,2,2); hold on;
     for i=1:numel(b3)
-        plot(i,b3(i),'*','DisplayName',num2str(stats0.p(i)));
+        plot(i,b3(i),'*','DisplayName',num2str(stats3.p(i)));
     end
     legend('show','Location','bestoutside')
     errorbar(b3,2*stats3.se);

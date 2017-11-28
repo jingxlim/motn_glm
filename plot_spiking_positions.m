@@ -48,7 +48,7 @@ elseif strcmp(p.Results.type,'subplot')
         xlabel('Normalized x position'); ylabel('Normalized y position');
         pbaspect([1 1 1]);
     end
-    suptitle('Spiking activity as a fnction of position')
+    suptitle('Spiking activity as a function of position')
 end
 
 end
