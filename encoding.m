@@ -61,9 +61,8 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     lambdaEst{2} = gen_lambda(b2,covar_m2);
     spikess{2} = spikes;
     % Model 3: history dependence
-    hist = 120;
-    spikes_m3 = spikes(hist+1:end);
-    covar_m = hist_dependence(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
+    hist = 1:120;
+    [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
     [b3,dev3,stats3] = glmfit(covar_m3,spikes_m3,'poisson');
     lambdaEst{3} = gen_lambda(b3,covar_m3);
     spikess{3} = spikes_m3;
@@ -71,6 +70,7 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     plot_ks(spikess,lambdaEst);
     cur_title = get(gca, 'Title');
     title([cur_title.String ': neuron ' num2str(i)]);
+    saveas(gcf, ['neuron ' num2str(i) '.png'])
     
     waitbar(i/size(spikes_binned,2),h)
 end
