@@ -29,7 +29,7 @@ end
 
 % Add spike history dependent covariates to matrix
 for n = 1:num_backsteps
-    covariate_matrix(:,i+n) = spikes((num_backsteps+1-(n-1)):end-(n-1));
+    covariate_matrix(:,i+n) = spikes((num_backsteps+1-n):end-n);
 end
 
 end
