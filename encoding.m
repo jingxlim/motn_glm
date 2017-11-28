@@ -64,7 +64,7 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     hist = 120;
     spikes_m3 = spikes(hist+1:end);
     covar_m = hist_dependence(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
-    [b3,dev3,stats3] = glmfit(covar_m,spikes_m3,'poisson');
+    [b3,dev3,stats3] = glmfit(covar_m3,spikes_m3,'poisson');
     lambdaEst{3} = gen_lambda(b3,covar_m3);
     spikess{3} = spikes_m3;
     
