@@ -117,15 +117,16 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     
     % plot betas
     subplot(1,2,2); hold on;
-    for n=1:numel(b3)
-        plot(n,b3(n),'*','DisplayName',num2str(stats3.p(n)));
-    end
-    legend('show','Location','bestoutside')
+%     for n=1:numel(b3)
+%         plot(n,b3(n),'*','DisplayName',num2str(stats3.p(n)));
+%     end
+%     legend('show','Location','bestoutside')
     errorbar(b3,2*stats3.se);
     xticks(1:length(b3));
     xlim([0 length(b3)+1]);
     xlabel('\beta number'); ylabel('\beta value');
     saveas(gcf, ['betas-neuron_' num2str(i) '.png'])
+    save(['glm_out-neuron_' num2str(i) '.mat'],'b3','dev3','stats3')
     
     % plot KS plots for all three models
     plot_ks(spikess,lambdaEst);
