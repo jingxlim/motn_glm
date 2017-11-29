@@ -105,7 +105,7 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     % compute lambda for each point on this grid using the GLM model
     lambda3 = exp(b3(1) + b3(2)*x_new + b3(3)*y_new + b3(4)*x_new.^2 +...
                   b3(5)*y_new.^2 + b3(6)*x_new.*y_new);
-    lambda3(find(x_new.^2 + y_new.^2 > 1))=nan;
+    lambda3(find(x_new.^2 + y_new.^2 > 1))=nan;  % what is this line doing?
 
     % plot lambda as a function position over this grid
     h_mesh = mesh(x_new,y_new,lambda3,'AlphaData',0);
