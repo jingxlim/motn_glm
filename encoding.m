@@ -55,7 +55,7 @@ clear spikess
 clear lambdaEst
 
 h = waitbar(0,'Please wait...');
-for i=1:size(spikes_binned,2)  % iterate through all the neurons
+for i=[3,5,6,7,8,9,10]  % iterate through all the neurons
     
     disp(['Working on neuron ' num2str(i) ' ...'])
     spikes = spikes_binned(:,i);
@@ -87,7 +87,7 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
 %     spikess{4} = spikes_ds;    
     
     % Model 3: linear + quadratic + integrate + history dependence
-    hist = 1:600;
+    hist = 1:5;
     [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
     [b3,dev3,stats3] = glmfit(covar_m3,spikes_m3,'poisson');
     lambdaEst{3} = gen_lambda(b3,covar_m3);
@@ -125,8 +125,8 @@ for i=1:size(spikes_binned,2)  % iterate through all the neurons
     xticks(1:length(b3));
     xlim([0 length(b3)+1]);
     xlabel('\beta number'); ylabel('\beta value');
-    saveas(gcf, ['betas-neuron_' num2str(i) '.png'])
-    save(['glm_out-neuron_' num2str(i) '.mat'],'b3','dev3','stats3')
+    saveas(gcf, ['30nov-betas-neuron_' num2str(i) '.png'])
+    save(['30nov-glm_out-neuron_' num2str(i) '.mat'],'b3','dev3','stats3')
     
     % plot KS plots for all three models
     plot_ks(spikess,lambdaEst);
