@@ -55,7 +55,7 @@ clear spikess
 clear lambdaEst
 
 h = waitbar(0,'Please wait...');
-for i=[3,5,6,7,8,9,10]  % iterate through all the neurons
+for i=[3]  % iterate through all the neurons
     
     disp(['Working on neuron ' num2str(i) ' ...'])
     spikes = spikes_binned(:,i);
@@ -87,8 +87,8 @@ for i=[3,5,6,7,8,9,10]  % iterate through all the neurons
 %     spikess{4} = spikes_ds;    
     
     % Model 3: linear + quadratic + integrate + history dependence
-    hist = 1:5;
-    [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
+    hist = 1:2;
+    [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,sin(xN),sin(yN));
     [b3,dev3,stats3] = glmfit(covar_m3,spikes_m3,'poisson');
     lambdaEst{3} = gen_lambda(b3,covar_m3);
     spikess{3} = spikes_m3;
