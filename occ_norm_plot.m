@@ -12,8 +12,8 @@ load('train.mat');
 ds_rate = 50;  % Hz
 [xN_ds,yN_ds,spikes_binned_ds] = downsample(xN,yN,spikes_binned,ds_rate);
 % variable generation
-[Vx,Vy,dir,r] = generate_new_variables(xN,yN,spikes_binned,1000);  % raw data
-[Vx_ds,Vy_ds,dir_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,spikes_binned_ds,ds_rate);
+[Vx,Vy,phi,r] = generate_new_variables(xN,yN,spikes_binned,1000);  % raw data
+[Vx_ds,Vy_ds,phi_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,spikes_binned_ds,ds_rate);
 % this will be inputs to the function
 n = 1; % neuron #
 
@@ -69,11 +69,11 @@ subplot(2,2,3);
 % Histogram of spiking to movement direction
 subplot(2,2,4);
     phis = -pi:.1:pi;
-    bar(phis,hist(dir(ind),phis)./hist(dir,phis));
+    bar(phis,hist(phi(ind),phis)./hist(phi,phis));
     xlabel('direction');
     ylabel('normalized spike counts');
     
     % GLM
-    b = glmfit(dir,spikes_binned(1:end-1,n),'poisson');    
+    b = glmfit(phi,spikes_binned(1:end-1,n),'poisson');    
     hold on;
-    plot(phis,exp(b(1)+b(2)*hist(dir(ind),phis)./hist(dir,phis)),'r');
+    plot(phis,exp(b(1)+b(2)*hist(phi(ind),phis)./hist(phi,phis)),'r');
