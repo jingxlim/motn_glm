@@ -1,10 +1,22 @@
 #+STARTUP: entitiespretty
 
 * 17NOV28
-** Things to add [0/6]
-- [ ] calculate movement speed
+** Things to add [1/6]
+- [X] calculate movement speed
 - [ ] check formula for phi, movement direction
 - [ ] plot the GLM fits of x velocity, y velocity, movement speed and heading direction along with the occupancy normalised histograms
 - [ ] Construct confidence intervals about your model conditional intensity
 - [ ] Characterize the relative goodness-of-fit among competing models i.e. deviance against the number of parameters (AIC)
 - [ ] Characterize the goodness-of-fit between data and model (KS statistic and KS plot)
+* 17NOV29
+** History dependence
+*** longest
+- Neuron 1: 1-29 ms
+- Neuron 2: 1-22 ms
+- Neuron 3: (badly fit)
+- Neuron 4: 1-21 ms
+- Neuron 5: (badly fit)
+*** 2nd longest
+- Neuron 1: 102 103 104 105 106 130 131 132 133 134
+- Neuron 2: 106 107 108 109 110 111 254 255 256 257 258 259
+- Neuron 4: 23 24 25 26 27 28 29 92 93 94 95 96 97 98
