@@ -1,7 +1,7 @@
 %% load data
 clr;
 
-load('glm_out-neuron_3.mat');
+load('30n-glm_out-neuron_3.mat');
 
 %% plot betas
 figure(1); clf; hold on;
