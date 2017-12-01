@@ -18,6 +18,9 @@ load('train.mat')
 %%%% notes %%%%
 % more variables could be useful but also means more to present
 
+formatOut = 'yymmdd';
+date = datestr(now,formatOut);
+
 %% plotting raw data
 % plot spike times as a function of location
 plot_spiking_positions(xN,yN,XLocAtSpikes,YLocAtSpikes,'subplot');
@@ -55,7 +58,9 @@ clear spikess
 clear lambdaEst
 
 h = waitbar(0,'Please wait...');
-for i=[3]  % iterate through all the neurons
+neurons = [3 5 6 7 8 9 10];
+
+for i=neurons  % iterate through all the neurons
     
     disp(['Working on neuron ' num2str(i) ' ...'])
     spikes = spikes_binned(:,i);
@@ -87,8 +92,8 @@ for i=[3]  % iterate through all the neurons
 %     spikess{4} = spikes_ds;    
     
     % Model 3: linear + quadratic + integrate + history dependence
-    hist = 1:2;
-    [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,sin(xN),sin(yN));
+    hist = 3:303;
+    [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
     [b3,dev3,stats3] = glmfit(covar_m3,spikes_m3,'poisson');
     lambdaEst{3} = gen_lambda(b3,covar_m3);
     spikess{3} = spikes_m3;
@@ -125,16 +130,16 @@ for i=[3]  % iterate through all the neurons
     xticks(1:length(b3));
     xlim([0 length(b3)+1]);
     xlabel('\beta number'); ylabel('\beta value');
-    saveas(gcf, ['30nov-betas-neuron_' num2str(i) '.png'])
-    save(['30nov-glm_out-neuron_' num2str(i) '.mat'],'b3','dev3','stats3')
+    saveas(gcf, [date '-betas-neuron_' num2str(i) '.png'])
+    save([date '-glm_out-neuron_' num2str(i) '.mat'],'b3','dev3','stats3')
     
     % plot KS plots for all three models
     plot_ks(spikess,lambdaEst);
     cur_title = get(gca, 'Title');
     title([cur_title.String ': neuron ' num2str(i)]);
-    saveas(gcf, ['KS-neuron_' num2str(i) '.png'])
+    saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
     
-    waitbar(i/size(spikes_binned,2),h);
+    waitbar(i/size(neurons,2),h);
 end
 
 %%%% notes %%%%
