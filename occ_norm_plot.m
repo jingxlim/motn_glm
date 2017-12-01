@@ -19,104 +19,101 @@
 %   load('train.mat');
 %   [vxN,vyN,phi,r] = generate_new_variables(xN,yN,spikes_binned,1000);
 % 
-% Notes to self
-%   Need to try history dependence
-%   do downsampling later
-%   ds_rate as input (Hz)
-% 
 % Adapted from glm_part2.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function occ_norm_plot(spikes_binned,vxN,vyN,phi,r,n)%,ds_rate)
-%% downsampling stuff for later
-% [xN_ds,yN_ds,spikes_binned_ds] = downsample(xN,yN,spikes_binned,ds_rate);
-% [Vx_ds,Vy_ds,phi_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,spikes_binned_ds,ds_rate);
-
+function occ_norm_plot(spikes_binned,vxN,vyN,phi,r,n)
 %% modify variables to work in functions
 vxN = [vxN;0];
 vyN = [vyN;0];
 r = [r;0];
 phi = [phi;0];
 
-%% Find spike bin index for occupancy normalized histograms
+% no history dependence
+test(spikes_binned,vxN,'vxN',n);
+test(spikes_binned,vyN,'yxN',n);
+test(spikes_binned,r,  'r',  n);
+test(spikes_binned,phi,'phi',n);
+
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% test(spikes_binned,data,name,ind,n)
+% 
+% Outputs: none (figures only)
+% Inputs:
+%   spikes_binned - spikes for all neurons (change to individual later)
+%   data - parameter used
+%   name - String name of data used
+%   n - neuron #
+% 
+% This function tests 6 different covariate models using the parameter data
+% given on the n neuron and calculates error.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function test(spikes_binned,data,name,n)
+% Find spike bin index for occupancy normalized histograms
 ind = [];
 for numspikes = 1:max(spikes_binned)
     ind = [ind; find(spikes_binned(:,n) >= numspikes)];
 end;
 
-% no history dependence
-test(spikes_binned,vxN,'vxN',ind,n);
-test(spikes_binned,vyN,'yxN',ind,n);
-test(spikes_binned,r,  'r',  ind,n);
-test(spikes_binned,phi,'phi',ind,n);
-    
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Inputs
-%   data - parameter used
-%   name - String name of data used
-%   n - neuron #
-% 
-% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function test(spikes_binned,data,name,ind,n)
+% figure prep
 figure('Name','Occupancy Normalized Plot')
-data_x = min(data):range(data)/80:max(data);
-bar(data_x,hist(data(ind),data_x)./hist(data,data_x));
 xlabel(name);
 ylabel('normalized spike counts');
 
+% variables
+m = 6;
+b = cell(1,m);
+cov = cell(1,m);
+data_x = min(data):range(data)/80:max(data);
+bar(data_x,hist(data(ind),data_x)./hist(data,data_x));
+
 % model 1
-cov1 = [data];
-b1 = glmfit(cov1,spikes_binned(:,n),'poisson');
+cov{1} = [data];
+b{1} = glmfit(cov{1},spikes_binned(:,n),'poisson');
 hold on;
-plot(data_x,exp(b1(1)+b1(2)*data_x),'r');
+plot(data_x,exp(b{1}(1)+b{1}(2)*data_x),'r');
 
 % model 2
-cov2 = [data.^2];
-b2 = glmfit(cov2,spikes_binned(:,n),'poisson');
+cov{2} = [data.^2];
+b{2} = glmfit(cov{2},spikes_binned(:,n),'poisson');
 hold on;
-plot(data_x,exp(b2(1)+b2(2)*data_x.^2),'g');
+plot(data_x,exp(b{2}(1)+b{2}(2)*data_x.^2),'g');
 
 % model 3
-cov3 = [data data.^2];
-b3 = glmfit(cov3,spikes_binned(:,n),'poisson');
+cov{3} = [data data.^2];
+b{3} = glmfit(cov{3},spikes_binned(:,n),'poisson');
 hold on;
-plot(data_x,exp(b3(1)+b3(2)*data_x+b3(3)*data_x.^2),'c');
+plot(data_x,exp(b{3}(1)+b{3}(2)*data_x+b{3}(3)*data_x.^2),'c');
 
 % model 4
-cov4 = [data.^3];
-b4 = glmfit(cov4,spikes_binned(:,n),'poisson');
+cov{4} = [data.^3];
+b{4} = glmfit(cov{4},spikes_binned(:,n),'poisson');
 hold on;
-plot(data_x,exp(b4(1)+b4(2)*data_x.^3),'m');
+plot(data_x,exp(b{4}(1)+b{4}(2)*data_x.^3),'m');
 
 % model 5
-cov5 = [data data.^3];
-b5 = glmfit(cov5,spikes_binned(:,n),'poisson');
+cov{5} = [data data.^3];
+b{5} = glmfit(cov{5},spikes_binned(:,n),'poisson');
 hold on;
-plot(data_x,exp(b5(1)+b5(2)*data_x+b5(3)*data_x.^3),'b');
+plot(data_x,exp(b{5}(1)+b{5}(2)*data_x+b{5}(3)*data_x.^3),'b');
 
 % model 6
-cov6 = [data data.^2 data.^3];
-b6 = glmfit(cov6,spikes_binned(:,n),'poisson');
+cov{6} = [data data.^2 data.^3];
+b{6} = glmfit(cov{6},spikes_binned(:,n),'poisson');
 hold on;
-plot(data_x,exp(b6(1)+b6(2)*data_x+b6(3)*data_x.^2+b6(4)*data_x.^3),'y');
+plot(data_x,exp(b{6}(1)+b{6}(2)*data_x+b{6}(3)*data_x.^2+b{6}(4)*data_x.^3),'y');
 
 % legend
 title(['ONP for Neuron ' num2str(n) ' ' name])
 legend('velocities','lin','quad','lin+quad','cub','li+cub','lin+quad+cub')
 set(gca, 'fontsize',14)
 
-% error calculation -> make this into loop later w/b&cov as cell arrays
-lambdaEst{1} = gen_lambda(b1,cov1);
-lambdaEst{2} = gen_lambda(b2,cov2);
-lambdaEst{3} = gen_lambda(b3,cov3);
-lambdaEst{4} = gen_lambda(b4,cov4);
-lambdaEst{5} = gen_lambda(b5,cov5);
-lambdaEst{6} = gen_lambda(b6,cov6);
+%% error calculation
+lambdaEst = cell(1,m);
+spikes = cell(1,m);
 
-spikes = cell(1,numel(lambdaEst));
-for i = 1:numel(lambdaEst)
+for i = 1:m
+    lambdaEst{i} = gen_lambda(b{i},cov{i});
     spikes{i} = spikes_binned;
 end
 
