@@ -1,7 +1,8 @@
 % generate_new_variables.m
 % [ISI,XLocAtSpikes,YLocAtSpikes] = generate_new_variables(x,y,spikes)
 % This function returns cell arrays of Interspike intervals (ISIs), X
-% Locations at spike times, and Y Locations at spike times.
+% Locations at spike times, Y Locations at spike times, movement direction,
+% and movement speed.
 
 function [Vx,Vy,dir,speed] = generate_new_variables(x,y,spikes,pos_sampling_rate)
 
