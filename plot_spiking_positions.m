@@ -47,8 +47,11 @@ elseif strcmp(p.Results.type,'subplot')
         title(['Neuron ' num2str(i)])
         xlabel('Normalized x position'); ylabel('Normalized y position');
         pbaspect([1 1 1]);
+        set(gca,'fontsize',20)
+
     end
-    suptitle('Spiking activity as a function of position')
+%     suptitle('Spiking activity as a function of position')
+    set(gca,'fontsize',20)
 end
 
 end

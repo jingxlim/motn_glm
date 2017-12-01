@@ -20,9 +20,11 @@ for i = 1:n,
     xlabel('Interspike Interval (ms)');
     ylabel('Number');
     title(['Neuron ' num2str(i)]);
-    
+    set(gca,'fontsize',20)
+
 end
-suptitle('Distribution of Interspike Intervals');
+set(gca,'fontsize',20)
+% suptitle('Distribution of Interspike Intervals');
 end
 
 
