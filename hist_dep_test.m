@@ -1,9 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Models of the Neuron
-% Project 2
-% Group: Jingxuan Lim, Simon Orozco, Seony Han
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %% start anew
 clearvars; % clear previous variables
 close all; % close previous plots
@@ -29,9 +23,6 @@ plot_spiking_positions(xN,yN,XLocAtSpikes,YLocAtSpikes,'subplot');
 ISI_threshold = 600;
 ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 
-% plot_spiking_velocities maybe?
-% plot_spiking_directions maybe?
-
 %% downsample data
 ds_rate = 50;  % Hz
 [xN_ds,yN_ds,spikes_binned_ds] = downsample(xN,yN,spikes_binned,ds_rate);
@@ -40,20 +31,6 @@ ds_rate = 50;  % Hz
 [Vx,Vy,dir,r] = generate_new_variables(xN,yN,spikes_binned,1000);  % raw data
 [Vx_ds,Vy_ds,dir_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,spikes_binned_ds,ds_rate);
 
-%% classifying cells
-% This needs to be automated, and it turns out that is a hard problem (at
-% least I struggled with it -Simon)
-
-% place
-% grid
-% multimodal (?) (I think this is where the history dependence could prove
-% to be a helpful covariate -Simon)
-
-%% encoding data
-% encode_place
-% encode_grid
-% encode_mm
-% ^ idk if those are functions. read below
 clear spikess
 clear lambdaEst
 
@@ -92,7 +69,7 @@ for i=neurons  % iterate through all the neurons
 %     spikess{4} = spikes_ds;    
     
     % Model 3: linear + quadratic + integrate + history dependence
-    hist = 3:303;
+    hist = 3:180;
     [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
     [b3,dev3,stats3] = glmfit(covar_m3,spikes_m3,'poisson');
     lambdaEst{3} = gen_lambda(b3,covar_m3);
@@ -141,26 +118,3 @@ for i=neurons  % iterate through all the neurons
     
     waitbar(i/size(neurons,2),h);
 end
-
-%%%% notes %%%%
-% what needs to happen
-%   - glmfit (diff covariates for each cell group)
-%   - lambda calc (could do in same fn as w/glmfit) --> calc_glm_lambda
-%   - plot lambda
-
-% options for implementation
-%   1. call calc_glm_lambda and plot_model for each cell group
-%   2. make separate encoding functions for each cell group. Those
-%   functions would call calc_glm_lambda and plot_model
-
-% other things
-%   - covariates depending on factors besides position would need different
-%   plot_model
-
-% These functions could all call the same glm/lambda fn (calc_glm_lambda)
-%   - inputs: covariates, spikes_binned
-%   - outputs: b, dev, stats --> double check how many of these we acutally
-%   need outside of the glm
-
-%% validate covariate choices
-
