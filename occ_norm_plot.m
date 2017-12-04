@@ -118,7 +118,8 @@ hold on;
 subplot(2,5,n)
 plot(data_x,exp(b{2}(1)+b{2}(2)*data_x.^2),'r');
 
-% find_ks(b,cov,spikes_binned,name,n,m);
+%% error calculation: creates m*10 figures
+find_ks(b,cov,spikes_binned,name,n,m);
 
 %% other models
 % % model 3
@@ -148,13 +149,18 @@ plot(data_x,exp(b{2}(1)+b{2}(2)*data_x.^2),'r');
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% find_ks(b,cov,spikes_binned,name,n,m)
 % 
-%   data - parameter used
+% Outputs: none (figures)
+% Inputs:
+%   b - vector of beta values
+%   cov - vector of covariates
 %   name - String name of data used
 %   n - neuron #
 %   m - # of models
 % 
-% 
+% This function creates the lambdaEst and spikes matrix necessary to call
+% the plot_ks function.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function find_ks(b,cov,spikes_binned,name,n,m)
 % variables
