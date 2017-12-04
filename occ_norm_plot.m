@@ -27,6 +27,10 @@ vyN = [vyN;0];
 r = [r;0];
 phi = [phi;0];
 
+% models tested
+m = 2; % number of models tested
+p = 4; % number of parameters involved
+
 % more variable stuff for efficiency
 params{1} = vxN;
 params{2} = vyN;
@@ -38,17 +42,18 @@ names{3} = 'phi';
 names{4} = 'r';
 m_names{1} = 'linear';
 m_names{2} = 'quad';
-figs = cell(1,8);
+figs = cell(1,m*p);
 
 
 % testing models
 % each parameter
-for i = 1:4
-    figs{2*i-1} = figure('Name',['ONP: ' names{i} ' ' m_names{1}]);
-    figs{2*i} = figure('Name',['ONP: ' names{i} ' ' m_names{2}]);
+for i = 1:p
+    % add/remove ilnes here based on # of models tested
+    figs{m*i-1} = figure('Name',['ONP: ' names{i} ' ' m_names{1}]);
+    figs{m*i}   = figure('Name',['ONP: ' names{i} ' ' m_names{2}]);
     % each neuron
     for j = 1:10
-        test(spikes_binned,params{i},names{i},m_names,j,figs,i*2-1);
+        test(spikes_binned,params{i},names{i},m_names,j,m,figs,i*m-1);
     end
 end
 
@@ -73,21 +78,20 @@ end
 % This function tests 6 different covariate models using the parameter data
 % given on the n neuron and calculates error.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function test(spikes_binned,data,name,m_names,n,figs,fig_id)
+function test(spikes_binned,data,name,m_names,n,m,figs,fig_id)
 % Find spike bin index for occupancy normalized histograms
 ind = [];
-for numspikes = 1:max(spikes_binned)
+for numspikes = 1:double(max(spikes_binned))
     ind = [ind; find(spikes_binned(:,n) >= numspikes)];
 end;
 
 % variables
-m = 2;
 b = cell(1,m);
 cov = cell(1,m);
 data_x = min(data):range(data)/80:max(data);
 
 % histogram
-for i = 0:1
+for i = 0:m-1
     figure(figs{fig_id+i})
     subplot(2,5,n)
     bar(data_x,hist(data(ind),data_x)./hist(data,data_x));
@@ -96,7 +100,7 @@ for i = 0:1
     ylabel('normalized spike counts');
 end
 
-% model 1
+% model 1: linear
 cov{1} = [data];
 b{1} = glmfit(cov{1},spikes_binned(:,n),'poisson');
 % figure
@@ -105,7 +109,7 @@ hold on;
 subplot(2,5,n)
 plot(data_x,exp(b{1}(1)+b{1}(2)*data_x),'r');
 
-% model 2
+% model 2: quad
 cov{2} = [data.^2];
 b{2} = glmfit(cov{2},spikes_binned(:,n),'poisson');
 % figure
