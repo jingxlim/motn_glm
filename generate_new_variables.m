@@ -4,16 +4,16 @@
 % Locations at spike times, Y Locations at spike times, movement direction,
 % and movement speed.
 
-function [Vx,Vy,dir,speed] = generate_new_variables(x,y,spikes,pos_sampling_rate)
+function [Vx,Vy,dir,speed] = generate_new_variables(x,y,pos_sampling_rate)
 
-% n = size(spikes,2);
+% add zero for length
+Vx    = [0; diff(x)*pos_sampling_rate];
+Vy    = [0; diff(y)*pos_sampling_rate];
+speed = (Vx.^2+Vy.^2).^.5;
 
-% for i = 1:n
-Vx = [diff(x)*pos_sampling_rate; 0];
-Vy = [diff(y)*pos_sampling_rate; 0];
-dir = [atan2((y(2:end)-y(1:end-1)),x(2:end)-x(1:end-1)); 0];
-speed = [(Vx.^2+Vy.^2).^.5; 0];
-% end
+% repeat first index instead of zero
+dir   = atan2((y(2:end)-y(1:end-1)),x(2:end)-x(1:end-1));
+dir   = [dir(1); dir];
 
 end
 

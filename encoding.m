@@ -31,8 +31,8 @@ ds_rate = 50;  % Hz
 [xN_ds,yN_ds,spikes_binned_ds] = downsample(xN,yN,spikes_binned,ds_rate);
 
 %% generate new covariates
-[Vx,Vy,phi,r] = generate_new_variables(xN,yN,spikes_binned,1000);  % raw data
-[Vx_ds,Vy_ds,dir_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,spikes_binned_ds,ds_rate);
+[Vx,Vy,phi,r] = generate_new_variables(xN,yN,1000);  % raw data
+[Vx_ds,Vy_ds,dir_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,ds_rate);
 
 %% classifying cells
 % This needs to be automated, and it turns out that is a hard problem (at
