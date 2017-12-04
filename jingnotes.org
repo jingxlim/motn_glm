@@ -10,13 +10,49 @@
 - [ ] Characterize the goodness-of-fit between data and model (KS statistic and KS plot)
 * 17NOV29
 ** History dependence
-*** longest
-- Neuron 1: 1-29 ms
-- Neuron 2: 1-22 ms
-- Neuron 3: (badly fit)
-- Neuron 4: 1-21 ms
-- Neuron 5: (badly fit)
-*** 2nd longest
-- Neuron 1: 102 103 104 105 106 130 131 132 133 134
-- Neuron 2: 106 107 108 109 110 111 254 255 256 257 258 259
-- Neuron 4: 23 24 25 26 27 28 29 92 93 94 95 96 97 98
+- to be safe, history dependence of 3 and above
+*** Neuron 1
+- [X] 1-29 ms
+- [X] 102-106 ms
+- 130-134 ms
+*** Neuron 2:
+- [X] 1-22 ms
+- [X] 106-111 ms
+- 123-127 ms
+  - 254-259 ms
+*** Neuron 3
+- [X] 8-21 ms
+- [X] 113-117 ms
+  - 158-159 ms
+*** Neuron 4
+- [X] 1-21 ms
+- [X] 23-29 ms
+- [X] 92-98 ms
+- [X] 104-108 ms
+***  Neuron 5
+- [X] 8-23 ms
+- [X] 28-32 ms
+- [X] 91-95 ms
+- 108-132 ms
+- 137-141 ms
+*** DONE Neuron 6
+- [X] 7-18 ms
+- 99-105 ms
+- 107-112 ms
+- 143-149 ms 
+*** Neuron 7
+- [X] 8-21 ms
+- 118-128 ms
+*** Neuron 8
+- [X] 9-23 ms
+- 117-119 ms
+- 131-133 ms
+*** Neuron 9
+- [X] 7-32 ms
+- 100-103 ms
+- 108-110 ms
+- 131-133 ms
+*** Neuron 10
+- [X] 7-33 ms
+- 107-121 ms
+- 124-137 ms

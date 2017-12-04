@@ -1,7 +1,17 @@
 %% load data
 clr;
 
-load('30n-glm_out-neuron_3.mat');
+% glm_out-neuron_1.mat
+% glm_out-neuron_2.mat
+% 171130-glm_out-neuron_3.mat
+% glm_out-neuron_4.mat
+% 171130-glm_out-neuron_5.mat
+% 171130-glm_out-neuron_6.mat
+% 171130-glm_out-neuron_7.mat
+% 171130-glm_out-neuron_8.mat
+% 171130-glm_out-neuron_9.mat
+% 171130-glm_out-neuron_10.mat
+load('171130-glm_out-neuron_6');
 
 %% plot betas
 figure(1); clf; hold on;
@@ -33,7 +43,7 @@ h = histogram(L,n);
 xlabel('Stretch number'); ylabel('Length of stretch');
 
 len = sort(h.Values);
-longest = len(end-1);
+longest = len(end-2);  % non-zero bins
 
 ylim([0 longest])
 
@@ -42,8 +52,8 @@ for i=1:numel(stretch_indexes)
     stretch_index = stretch_indexes(i);
     covar_index = find(L == stretch_index);
 
-    for i=1:5
-        covar_index = covar_index(covar_index ~= i);
+    for j=1:5
+        covar_index = covar_index(covar_index ~= j);
     end
 
     hist_dep = covar_index - 5

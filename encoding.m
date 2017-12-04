@@ -31,7 +31,7 @@ ds_rate = 50;  % Hz
 [xN_ds,yN_ds,spikes_binned_ds] = downsample(xN,yN,spikes_binned,ds_rate);
 
 %% generate new covariates
-[Vx,Vy,dir,r] = generate_new_variables(xN,yN,spikes_binned,1000);  % raw data
+[Vx,Vy,phi,r] = generate_new_variables(xN,yN,spikes_binned,1000);  % raw data
 [Vx_ds,Vy_ds,dir_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,spikes_binned_ds,ds_rate);
 
 %% classifying cells
@@ -62,22 +62,22 @@ for i=neurons  % iterate through all the neurons
     
     % DEFINE MODELS
     % Model 1: neuron 6
-    hist = [5:20, 100:115 145:155];
-    [spikes_m1,covar_m1] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2);
+    hist = [7:18 99:112 143:149];
+    [spikes_m1,covar_m1] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
     [b1,dev1,stats1] = glmfit(covar_m1,spikes_m1,'poisson');
     lambdaEst{1} = gen_lambda(b1,covar_m1);
     spikess{1} = spikes_m1;
     
-    % Model 2
-    hist = 3:30;
-    [spikes_m2,covar_m2] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
+    % Model 2: unimodal place cells 1-5
+    hist = [3:30 91:141];
+    [spikes_m2,covar_m2] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2);
     [b2,dev2,stats2] = glmfit(covar_m2,spikes_m2,'poisson');
     lambdaEst{2} = gen_lambda(b2,covar_m2);
     spikess{2} = spikes_m2;
     
-    % Model 3:
-    hist = 3:30;
-    [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN);
+    % Model 3: multimodal place cell 7-10
+    hist = [7:33 99:149];
+    [spikes_m3,covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
     [b3,dev3,stats3] = glmfit(covar_m3,spikes_m3,'poisson');
     lambdaEst{3} = gen_lambda(b3,covar_m3);
     spikess{3} = spikes_m3;
