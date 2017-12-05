@@ -31,7 +31,7 @@ p = 4; % number of parameters involved
 figs = cell(p,m/p);
 
 % base: always included in covariates
-base = [xN;yN;xN.^2;yN.^2;xN.*yN];
+base = [xN yN xN.^2 yN.^2 xN.*yN];
 
 % covs: what we're testing
 covs{1,1} = vxN;    covs{1,2} = vxN.^2;
@@ -49,11 +49,13 @@ modals{1} = 'uni';  modals{2} = 'multi';
 % each parameter in params
 for i = 1:p
     % add/remove lines here based on # of models tested
-    figs{2*i-1} = figure('Name',['ONP: ' p_names{i} ' unimodal']);
-    figs{2*i}   = figure('Name',['ONP: ' p_names{i} ' multimodal']);
+    figs{i,1} = figure('Name',['ONP: ' p_names{i} ' unimodal']);
+    figs{i,2} = figure('Name',['ONP: ' p_names{i} ' multimodal']);
+    temp_covs{1} = covs{i,1};
+    temp_covs{2} = covs{i,2};
     % each neuron
     for j = 1:10
-        test_models(spikes_binned(:,j),base,covs{i,:},modals,j,figs);
+        test_models(spikes_binned(:,j),base,temp_covs,modals,j,i,figs);
     end
 end
 
@@ -73,13 +75,15 @@ end
 %   spikes_binned - spikes for neuron n
 %   base - the covariates common in all models tested
 %   covs - the covariates we are testing
+%   modals - {'uni' 'multi'}
 %   n - neuron #
 %   p - parameter # (1=vxN, 2=vyN, 3=phi, 4=r)
+%   figs - cell array of all the figures
 % 
 % This function tests 6 different covariate models using the parameter data
 % given on the n neuron and calculates error.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function test_models(spikes,base,covs,modals,n,figs)
+function test_models(spikes,base,covs,modals,n,p,figs)
 % variables
 % c = length(covs);
 % sep = length(modals);
@@ -94,9 +98,9 @@ cov{1} = base;
 b{1} = glmfit(cov{1},spikes,'poisson');
 
 % additional covariates
-for i = 2:m+1
+for i = 2:m
     % glm
-    cov{i} = [base; covs{1,i}];
+    cov{i} = [base covs{i-1}];
     b{i} = glmfit(cov{i},spikes,'poisson');
 %     % figure
 %     figure(figs{p,i})
@@ -107,7 +111,7 @@ for i = 2:m+1
 end
 
 %% error calculation: creates m*10 figures
-find_ks3(b,cov,spikes,figs,double(n>5)+1,modals,n,m+1);
+find_ks3(b,cov,spikes,figs,double(n>5)+1,modals,n,p,m);
 
 end
 
@@ -123,12 +127,13 @@ end
 %   mode - # representing modality (1=uni, 2=multi)
 %   name - String name of data used
 %   n - neuron #
+%   p - parameter #
 %   m - # of models
 % 
 % This function creates the lambdaEst and spikes matrix necessary to call
 % the plot_ks function.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function find_ks3(b,cov,spikes,figs,mode,name,n,m)
+function find_ks3(b,cov,spikes,figs,mode,name,n,p,m)
 % variables
 lambdaEst = cell(1,m);
 spikes_all = cell(1,m);
