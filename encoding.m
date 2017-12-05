@@ -15,10 +15,12 @@ date = datestr(now,formatOut);
 %% plotting raw data
 % spike times vs location
 plot_spiking_positions(xN,yN,XLocAtSpikes,YLocAtSpikes,'subplot');
+saveas(gcf, 'spike_pos.png')
 
 % ISIs
 ISI_threshold = 600;
 ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
+saveas(gcf, 'isi.png')
 
 %% downsample data
 ds_rate = 50;  % Hz
