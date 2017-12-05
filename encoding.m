@@ -38,114 +38,123 @@ clear spikess
 clear lambdaEst
 
 h = waitbar(0,'Please wait...');
-all_neurons = 1:size(spikes_binned,2);
-neurons = 1:10;
 
-% variables
+% parameters
+neurons = 1:10;
 num_model = 3;
-spikess = cell(1,num_model);
-covar = cell(1,num_model);
 [x_new,y_new] = meshgrid(-1:.1:1);
+y_new = flipud(y_new);
+x_new = fliplr(x_new);
+
+% prepare storage
+spike = cell(length(neurons),num_model);
+covar = cell(length(neurons),num_model);
+covar_grid = cell(length(neurons),num_model);
+b = cell(length(neurons),num_model);
+dev = cell(length(neurons),num_model);
+stats = cell(length(neurons),num_model);
+lambda = cell(length(neurons),num_model);
+lambda_grid = cell(length(neurons),num_model);
 
 %% iterate through neurons of interest
 
-for i = neurons  % neurons | all_neurons
+for i = neurons
     disp(['Working on neuron ' num2str(i) ' ...'])
     
     %% variables
     spikes = spikes_binned(:,i);  % spikes of the relevant neuron
     
-    % w/o hist dep (for lambda plot)
-    b = cell(1,num_model);
-    lambda = cell(1,num_model);
-    
-    % w/hist dep
-    b_hist = cell(1,num_model);
-    stats = cell(1,num_model);
-    
+
     %% DEFINE MODELS
     % Model 1: neuron 6
-    hist = [7:18 99:112 143:149];
-    lambda{1} = ones(length(xN),1);
-    
-    [spikess{1},covar_m1] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
-    [b_hist{1},dev1,stats{1}] = glmfit(covar_m1,spikess{1},'poisson');
-    lambdaEst{1} = gen_lambda(b_hist{1},covar_m1);
-    
+    hist = [4:15 96:109 140:146];
+    [spike{i,1},covar{i,1}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
+    [b{i,1},dev{i,1},stats{i,1}] = glmfit(covar{i,1},spike{i,1},'poisson');
+    lambda{i,1} = gen_lambda(b{i,1},covar{i,1});
     % plot lambda as a function of X and Y position
-    covar{1} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new];
-    [b{1},~,~] = glmfit([xN,yN,xN.^2,yN.^2,xN.*yN,phi],spikes,'poisson');
-    for j = 1:size(covar{1},2)
-        lambda{1} = b{1}(j)*covar{1}(:,j) + lambda{1};
-    end
-    lambda{1} = exp(lambda{1});
-%     lambda{1} = exp(b{1}(1) + b{1}(2)*x_new + b{1}(3)*y_new + ...
-%         b{1}(4)*x_new.^2 + b{1}(5)*y_new.^2 + b{1}(6)*x_new.*y_new + ...
-%         b{1}(7)*phi);
-    lambda{1}(find(x_new.^2 + y_new.^2 > 1)) = nan; % Simon what does this mean?
+    covar_grid{i,1} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new]';
+    lambda_grid{i,1} = exp(b{i,1}(1) + ...
+                           b{i,1}(2)*x_new + ...
+                           b{i,1}(3)*y_new + ...
+                           b{i,1}(4)*x_new.^2 + ...
+                           b{i,1}(5)*y_new.^2 + ...
+                           b{i,1}(6)*x_new.*y_new);
+    lambda_grid{i,1}(find(x_new.^2 + y_new.^2 > 1)) = nan;
     
     % Model 2: unimodal place cells 1-5
-    hist = [3:30 91:141];
-    lambda{2} = ones(length(xN),1);
-    
-    [spikess{2},covar_m2] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2);
-    [b_hist{2},dev2,stats{2}] = glmfit(covar_m2,spikess{2},'poisson');
-    lambdaEst{2} = gen_lambda(b_hist{2},covar_m2);
-    % prep for lambda plot
-    covar{2} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new,phi_new.^2];
-    [b{2},~,~] = glmfit([xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2],spikes,'poisson');
-    for j = 1:size(covar{2},2)
-        lambda{2} = b{2}(j)*covar{2}(:,j) + lambda{2};
-    end
-    lambda{2} = exp(lambda{2});
-    lambda{2}(find(x_new.^2 + y_new.^2 > 1)) = nan; % Simon what does this mean?
-
+    hist = [3:29 88:138];
+    [spike{i,2},covar{i,2}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2);
+    [b{i,2},dev{i,2},stats{i,2}] = glmfit(covar{i,2},spike{i,2},'poisson');
+    lambda{i,2} = gen_lambda(b{i,2},covar{i,2});
+    % plot lambda as a function of X and Y position
+    covar_grid{i,2} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new]';
+    lambda_grid{i,2} = exp(b{i,2}(1) + ...
+                           b{i,2}(2)*x_new + ...
+                           b{i,2}(3)*y_new + ...
+                           b{i,2}(4)*x_new.^2 + ...
+                           b{i,2}(5)*y_new.^2 + ...
+                           b{i,2}(6)*x_new.*y_new);
+    lambda_grid{i,2}(find(x_new.^2 + y_new.^2 > 1)) = nan;
     
     % Model 3: multimodal place cell 7-10
-    hist = [7:33 99:149];
-    lambda{3} = ones(length(xN),1);
-
-    [spikess{3},covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
-    [b_hist{3},dev3,stats{3}] = glmfit(covar_m3,spikess{3},'poisson');
-    lambdaEst{3} = gen_lambda(b_hist{3},covar_m3);
-    % prep for lambda plot
-    covar{3} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new,phi_new];
-    [b{3},~,~] = glmfit([xN,yN,xN.^2,yN.^2,xN.*yN,phi],spikes,'poisson');
-    for j = 1:size(covar{3},2)
-        lambda{3} = b{3}(j)*covar{3}(:,j) + lambda{3};
-    end
-    lambda{3} = exp(lambda{3});
-    lambda{3}(find(x_new.^2 + y_new.^2 > 1)) = nan; % Simon what does this mean?
+    hist = [4:30 96:146];
+    [spike{i,3},covar{i,3}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
+    [b{i,3},dev{i,3},stats{i,3}] = glmfit(covar{i,3},spike{i,3},'poisson');
+    lambda{i,3} = gen_lambda(b{i,3},covar{i,3});
+    % plot lambda as a function of X and Y position
+    covar_grid{i,3} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new]';
+    lambda_grid{i,3} = exp(b{i,3}(1) + ...
+                           b{i,3}(2)*x_new + ...
+                           b{i,3}(3)*y_new + ...
+                           b{i,3}(4)*x_new.^2 + ...
+                           b{i,3}(5)*y_new.^2 + ...
+                           b{i,3}(6)*x_new.*y_new);
+    lambda_grid{i,3}(find(x_new.^2 + y_new.^2 > 1)) = nan;
 
     %% EVALUATE MODELS
     figure('Name',['Cell ' num2str(i)]);
 
     % Model subplots w/beta subplots below
     for j = 1:num_model
-        % model
-        subplot(num_model,2,j); hold on;
+        
+        % plot lambda as a function of position
+        subplot(2,num_model,j); hold on;
         %% TODO
         % the lambdas could be the same if they correspond to the same
         % variate (check)
         
-        %%
-        h_mesh = mesh(x_new,y_new,lambda{j},'AlphaData',0);
+        h_mesh = mesh(x_new,y_new,lambda_grid{i,j},'AlphaData',0);
+        get(h_mesh,'AlphaData');
+        set(h_mesh,'AlphaData',0);
+        hold on;
         plot3(cos(-pi:1e-2:pi),sin(-pi:1e-2:pi),zeros(size(-pi:1e-2:pi)));
         xlabel('x position [m]'); ylabel('y position [m]');
-        % beta
-        subplot(num_model,2,j+num_model); hold on;
-        errorbar(b_hist{j},2*stats{j}.se);
-        xticks(1:length(b_hist{j}));
-        xlim([0 length(b_hist{j})+1]);
+        
+        % plot beta
+        subplot(2,num_model,j+3); hold on;
+        errorbar(b{i,j},2*stats{i,j}.se);
+        xticks(1:length(b{i,j}));
+        xlim([0 length(b{i,j})+1]);
         xlabel('\beta number'); ylabel('\beta value');
-        % k-s
-        plot_ks(spikess,lambdaEst);
-        cur_title = get(gca, 'Title');
-        title([cur_title.String ': neuron ' num2str(i)]);
-        saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
-
-        % 
+        
+        saveas(gcf, [date '-beta_' num2str(i) '.png'])
+        
     end
+    
+    %% plot KS plots for all three models
+    ks_spikes{1} = spike{i,1};
+    ks_spikes{2} = spike{i,2};
+    ks_spikes{3} = spike{i,3};
+    ks_lambda{1} = lambda{i,1};
+    ks_lambda{2} = lambda{i,2};
+    ks_lambda{3} = lambda{i,3};    
+    plot_ks(ks_spikes,ks_lambda);
+    cur_title = get(gca, 'Title');
+    title([cur_title.String ': neuron ' num2str(i)]);
+    saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
+    
+    waitbar(i/length(neurons),h);
+end
     
     %% was commented out before
 %     for n=1:numel(b3)
@@ -161,14 +170,7 @@ for i = neurons  % neurons | all_neurons
 %     saveas(gcf, [date '-betas-neuron_' num2str(i) '.png'])
 %     save([date '-glm_out-neuron_' num2str(i) '.mat'],'b3','dev3','stats3')
     
-    %% plot KS plots for all three models
-    plot_ks(spikess,lambdaEst);
-    cur_title = get(gca, 'Title');
-    title([cur_title.String ': neuron ' num2str(i)]);
-    saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
-    
-    waitbar(i/length(neurons),h);
-end
+
 
 %%%% notes %%%%
 % what needs to happen

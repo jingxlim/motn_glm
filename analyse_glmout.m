@@ -11,7 +11,7 @@ clr;
 % 171130-glm_out-neuron_8.mat
 % 171130-glm_out-neuron_9.mat
 % 171130-glm_out-neuron_10.mat
-load('171130-glm_out-neuron_6');
+load('glm_out-neuron_1');
 
 %% plot betas
 figure(1); clf; hold on;

@@ -20,7 +20,7 @@ function [spikes_trunc,covar_m] = hist_dep(timesteps,spikes,varargin)
 
 n_cov = length(varargin); % Number of non-spike covariates
 n_timesteps = length(timesteps);  % Number of spike convariates
-tot_cov = n_cov + n_timesteps; % Total number of covariates
+tot_cov = n_cov + n_timesteps % Total number of covariates
 
 spikes_trunc = spikes(max(timesteps)+1:end);
 
@@ -33,8 +33,9 @@ for i = 1:n_cov
 end
 
 % Add spike history dependent covariates to matrix
-for n = timesteps
-    covar_m(:,n_cov+n) = spikes(max(timesteps)-n+1:end-n);
+for n = 1:numel(timesteps)
+    time = timesteps(n);
+    covar_m(:,n_cov+n) = spikes(max(timesteps)-time+1:end-time);
 end
 
 if length(spikes_trunc) ~= size(covar_m,1);
