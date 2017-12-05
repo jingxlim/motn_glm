@@ -87,9 +87,11 @@ function test_models(spikes,base,covs,modals,n,p,figs)
 % variables
 % c = length(covs);
 % sep = length(modals);
-m = numel(modals)+1;    % number of models testing
-b = cell(1,m);
-cov = cell(1,m);
+m = numel(covs)+1;  % number of models testing = lin+quad+base
+m_add = 2;          % if testing additional models
+m_tot = m + m_add;
+b = cell(1,m_tot);
+cov = cell(1,m_tot);
 % data_x = min(params):range(params)/80:max(params);
 
 %% models
@@ -101,17 +103,17 @@ b{1} = glmfit(cov{1},spikes,'poisson');
 for i = 2:m
     % glm
     cov{i} = [base covs{i-1}];
-    b{i} = glmfit(cov{i},spikes,'poisson');
-%     % figure
-%     figure(figs{p,i})
-%     hold on;
-%     subplot(3,5,i*5+mod(n,5))
-%     plot(data_x,gen_lambda(b{i},cov{i}))
-    
+    b{i} = glmfit(cov{i},spikes,'poisson');    
 end
 
+% additional models (variations of base)
+for i = 1:m_add
+    ind = m+i;
+    cov{ind} = base(:,i+1:end);
+    b{ind} = glmfit(cov{ind},spikes,'poisson');
+end
 %% error calculation: creates m*10 figures
-find_ks3(b,cov,spikes,figs,double(n>5)+1,modals,n,p,m);
+find_ks3(b,cov,spikes,figs,double(n>5)+1,modals,n,p,m_tot);
 
 end
 
@@ -151,8 +153,8 @@ hold on;
 
 % actually calculations
 anyplot_ks(spikes_all,lambdaEst);
-cur_title = get(gca, 'Title');
-title([cur_title.String ': neuron ' num2str(n) ' ' name(mode) 'modal']);
+title(['Neuron ' num2str(n)]);
+set(gca,'fontsize',20)
 % saveas(gcf, ['KS-neuron_' num2str(n) '.png'])
 
 end

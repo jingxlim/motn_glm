@@ -66,3 +66,4 @@ xlabel('Uniform CDF');
 ylabel('Empirical CDF of Rescaled ISIs');
 title('KS Plot with 95% Confidence Intervals');
 legend(h, 'Location', 'northwest');
+set(gca,'fontsize',20)
