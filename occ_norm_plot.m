@@ -16,17 +16,11 @@
 % 
 % When using this function from Command Prompt:
 %   load('train.mat');
-%   [vxN,vyN,phi,r] = generate_new_variables(xN,yN,spikes_binned,1000);
+%   [vxN,vyN,phi,r] = generate_new_variables(xN,yN,1000);
 % 
 % Adapted from glm_part2.m
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function occ_norm_plot(spikes_binned,vxN,vyN,phi,r)
-% modify variables to work in functions
-vxN = [vxN;0];
-vyN = [vyN;0];
-r = [r;0];
-phi = [phi;0];
-
 % models tested
 m = 2; % number of models tested
 p = 4; % number of parameters involved
@@ -48,7 +42,7 @@ figs = cell(1,m*p);
 % testing models
 % each parameter
 for i = 1:p
-    % add/remove ilnes here based on # of models tested
+    % add/remove lines here based on # of models tested
     figs{m*i-1} = figure('Name',['ONP: ' names{i} ' ' m_names{1}]);
     figs{m*i}   = figure('Name',['ONP: ' names{i} ' ' m_names{2}]);
     % each neuron
@@ -60,7 +54,7 @@ end
 %% saving figures
 % for i = 1:8
 %     figure(figs{i})
-%     saveas(gcf, ['ONP_' num2str(names{ceil(i/2)}) '_' num2str(m_names{i-2*floor((i-1)/2)}) '.png'])
+%     saveas(gcf, ['ONP_' num2str(names{ceil(i/m)}) '_' num2str(m_names{i-2*floor((i-1)/m)}) '.png'])
 % end
 
 end
