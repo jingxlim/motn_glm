@@ -6,7 +6,6 @@ close all; % close previous plots
 load('train.mat')
 [ISI,XLocAtSpikes,YLocAtSpikes] =...
     gen_spike_stat(xN,yN,spikes_binned);
-neurons = size(spikes_binned,2);
 
 % wait bar prep
 formatOut = 'yymmdd';
@@ -22,13 +21,8 @@ ISI_threshold = 600;
 ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 saveas(gcf, 'isi.png')
 
-%% downsample data
-ds_rate = 50;  % Hz
-[xN_ds,yN_ds,spikes_binned_ds] = downsample(xN,yN,spikes_binned,ds_rate);
-
 %% generate new covariates
 [Vx,Vy,phi,r] = generate_new_variables(xN,yN,1000);  % raw data
-[Vx_ds,Vy_ds,dir_ds,r_ds] = generate_new_variables(xN_ds,yN_ds,ds_rate);
 
 %% classifying cells
 % This needs to be automated, and it turns out that is a hard problem (at
@@ -44,29 +38,30 @@ clear spikess
 clear lambdaEst
 
 h = waitbar(0,'Please wait...');
+all_neurons = 1:size(spikes_binned,2);
+neurons = 1:10;
 
 % variables
-models = 3;
-spikess = cell(1,models);
-covar = cell(1,models);
+num_model = 3;
+spikess = cell(1,num_model);
+covar = cell(1,num_model);
 [x_new,y_new] = meshgrid(-1:.1:1);
 
+%% iterate through neurons of interest
 
-
-% iterate through all the neurons
-for i = 1:neurons
+for i = neurons  % neurons | all_neurons
     disp(['Working on neuron ' num2str(i) ' ...'])
     
     %% variables
-    spikes = spikes_binned(:,i);
+    spikes = spikes_binned(:,i);  % spikes of the relevant neuron
     
     % w/o hist dep (for lambda plot)
-    b = cell(1,models);
-    lambda = cell(1,models);
+    b = cell(1,num_model);
+    lambda = cell(1,num_model);
     
     % w/hist dep
-    b_hist = cell(1,models);
-    stats = cell(1,models);
+    b_hist = cell(1,num_model);
+    stats = cell(1,num_model);
     
     %% DEFINE MODELS
     % Model 1: neuron 6
@@ -76,8 +71,9 @@ for i = 1:neurons
     [spikess{1},covar_m1] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
     [b_hist{1},dev1,stats{1}] = glmfit(covar_m1,spikess{1},'poisson');
     lambdaEst{1} = gen_lambda(b_hist{1},covar_m1);
-    % prep for lambda plot
-    covar{1} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new,phi_new];
+    
+    % plot lambda as a function of X and Y position
+    covar{1} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new];
     [b{1},~,~] = glmfit([xN,yN,xN.^2,yN.^2,xN.*yN,phi],spikes,'poisson');
     for j = 1:size(covar{1},2)
         lambda{1} = b{1}(j)*covar{1}(:,j) + lambda{1};
@@ -125,9 +121,9 @@ for i = 1:neurons
     figure('Name',['Cell ' num2str(i)]);
 
     % Model subplots w/beta subplots below
-    for j = 1:models
+    for j = 1:num_model
         % model
-        subplot(models,2,j); hold on;
+        subplot(num_model,2,j); hold on;
         %% TODO
         % the lambdas could be the same if they correspond to the same
         % variate (check)
@@ -137,7 +133,7 @@ for i = 1:neurons
         plot3(cos(-pi:1e-2:pi),sin(-pi:1e-2:pi),zeros(size(-pi:1e-2:pi)));
         xlabel('x position [m]'); ylabel('y position [m]');
         % beta
-        subplot(models,2,j+models); hold on;
+        subplot(num_model,2,j+num_model); hold on;
         errorbar(b_hist{j},2*stats{j}.se);
         xticks(1:length(b_hist{j}));
         xlim([0 length(b_hist{j})+1]);
