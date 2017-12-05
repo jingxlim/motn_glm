@@ -47,7 +47,7 @@ for i = 1:p
     figs{m*i}   = figure('Name',['ONP: ' names{i} ' multimodal']);
     % each neuron
     for j = 1:10
-        test(spikes_binned,params{i},names{i},m_names,j,m,figs,i*m-1);
+        test_mods(spikes_binned,params{i},names{i},m_names,j,m,figs,i*m-1);
     end
 end
 
@@ -72,7 +72,7 @@ end
 % This function tests 6 different covariate models using the parameter data
 % given on the n neuron and calculates error.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function test(spikes_binned,data,name,m_names,n,m,figs,fig_id)
+function test_mods(spikes_binned,data,name,m_names,n,m,figs,fig_id)
 % Find spike bin index for occupancy normalized histograms
 ind = [];
 for numspikes = 1:double(max(spikes_binned))
