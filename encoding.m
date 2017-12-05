@@ -110,9 +110,18 @@ for i = neurons
                            b{i,3}(5)*y_new.^2 + ...
                            b{i,3}(6)*x_new.*y_new);
     lambda_grid{i,3}(find(x_new.^2 + y_new.^2 > 1)) = nan;
+    
+    waitbar(i/length(neurons),h);
+    
+end
 
+for i = 1:5
+    disp(['Plotting neuron ' num2str(i) ' ...'])
+    
     %% EVALUATE MODELS
-    figure('Name',['Cell ' num2str(i)]);
+    
+    figure('units','normalized','outerposition',[0 0.035 1 0.92]);
+    suptitle(['Cell ' num2str(i)]);
 
     % Model subplots w/beta subplots below
     for j = 1:num_model
@@ -147,13 +156,17 @@ for i = neurons
     ks_spikes{3} = spike{i,3};
     ks_lambda{1} = lambda{i,1};
     ks_lambda{2} = lambda{i,2};
-    ks_lambda{3} = lambda{i,3};    
-    plot_ks(ks_spikes,ks_lambda);
+    ks_lambda{3} = lambda{i,3};
+    ks_dev{1} = dev{i,1};
+    ks_dev{2} = dev{i,2};
+    ks_dev{3} = dev{i,3};
+    ks_b{1} = b{i,1};
+    ks_b{2} = b{i,2};
+    ks_b{3} = b{i,3};
+    plot_ks(ks_spikes,ks_lambda,ks_b,ks_dev);
     cur_title = get(gca, 'Title');
     title([cur_title.String ': neuron ' num2str(i)]);
     saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
-    
-    waitbar(i/length(neurons),h);
 end
     
     %% was commented out before

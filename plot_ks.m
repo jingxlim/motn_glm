@@ -17,7 +17,7 @@
 % Function by: Lim Jing Xuan
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 
-function plot_ks(spikess, lambdaEsts)
+function plot_ks(spikess, lambdaEsts, bs, devs)
 
 figure(); clf; hold on;
 h = [];
@@ -27,6 +27,9 @@ for i=1:numel(lambdaEsts)
     
     lambdaEst = lambdaEsts{i};
     spikes = spikess{i};
+    b = bs{i};
+    dev = devs{i};
+    
     timestep = 1;
     lambdaInt = 0;
     j = 0;
@@ -43,11 +46,12 @@ for i=1:numel(lambdaEsts)
 
     KSSorted = sort(KS);
     N = length(KSSorted)
-
+    
     % plot KS plots
     ks_stat = max(abs(KSSorted - ([1:N]-.5)/N));
+    AIC = dev+2*length(b);
     h(i) = plot(([1:N]-.5)/N, KSSorted,...
-            'DisplayName', ['KS = ' num2str(ks_stat)]);
+            'DisplayName', ['KS = ' num2str(ks_stat) '; AIC = ' num2str(AIC)]);
     
 end
 
