@@ -8,7 +8,7 @@ load('train.mat')
     gen_spike_stat(xN,yN,spikes_binned);
 
 % wait bar prep
-formatOut = 'yymmdd';
+formatOut = 'yymmdd-HHMMSS';
 date = datestr(now,formatOut);
 
 %% plotting raw data
