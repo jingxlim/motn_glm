@@ -42,7 +42,14 @@ clear spikess
 clear lambdaEst
 
 h = waitbar(0,'Please wait...');
+
+% variables
 models = 3;
+spikess = cell(1,models);
+covar = cell(1,models);
+[x_new,y_new] = meshgrid(-1:.1:1);
+
+
 
 % iterate through all the neurons
 for i = 1:neurons
@@ -50,10 +57,6 @@ for i = 1:neurons
     
     %% variables
     spikes = spikes_binned(:,i);
-    spikess = cell(1,models);
-    covar = cell(1,models);
-    [x_new,y_new] = meshgrid(-1:.1:1);
-
     
     % w/o hist dep (for lambda plot)
     b = cell(1,models);
@@ -65,7 +68,6 @@ for i = 1:neurons
     
     %% DEFINE MODELS
     % Model 1: neuron 6
-    covar{1} = [xN,yN,xN.^2,yN.^2,xN.*yN,phi];
     hist = [7:18 99:112 143:149];
     lambda{1} = ones(length(xN),1);
     
@@ -73,8 +75,9 @@ for i = 1:neurons
     [b_hist{1},dev1,stats{1}] = glmfit(covar_m1,spikess{1},'poisson');
     lambdaEst{1} = gen_lambda(b_hist{1},covar_m1);
     % prep for lambda plot
-    [b{1},~,~] = glmfit(covar{1},spikes,'poisson');
-    for j = 1:length(covar{1})
+    covar{1} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new,phi_new];
+    [b{1},~,~] = glmfit([xN,yN,xN.^2,yN.^2,xN.*yN,phi],spikes,'poisson');
+    for j = 1:size(covar{1},2)
         lambda{1} = b{1}(j)*covar{1}(:,j) + lambda{1};
     end
     lambda{1} = exp(lambda{1});
@@ -84,17 +87,16 @@ for i = 1:neurons
     lambda{1}(find(x_new.^2 + y_new.^2 > 1)) = nan; % Simon what does this mean?
     
     % Model 2: unimodal place cells 1-5
-    covar{2} = [ones(length(xN),1),xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2];
     hist = [3:30 91:141];
-    lambda{2} = [];
+    lambda{2} = ones(length(xN),1);
     
     [spikess{2},covar_m2] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2);
     [b_hist{2},dev2,stats{2}] = glmfit(covar_m2,spikess{2},'poisson');
     lambdaEst{2} = gen_lambda(b_hist{2},covar_m2);
     % prep for lambda plot
-    covar{2} = [ones(length(xN),1),xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2];
-    [b{2},~,~] = glmfit(covar{2},spikes,'poisson');
-    for j = 1:length(covar{2})
+    covar{2} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new,phi_new.^2];
+    [b{2},~,~] = glmfit([xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2],spikes,'poisson');
+    for j = 1:size(covar{2},2)
         lambda{2} = b{2}(j)*covar{2}(:,j) + lambda{2};
     end
     lambda{2} = exp(lambda{2});
@@ -102,16 +104,16 @@ for i = 1:neurons
 
     
     % Model 3: multimodal place cell 7-10
-    covar{3} = [ones(length(xN),1),xN,yN,xN.^2,yN.^2,xN.*yN,phi];
     hist = [7:33 99:149];
-    lambda{3} = [];
+    lambda{3} = ones(length(xN),1);
 
     [spikess{3},covar_m3] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
     [b_hist{3},dev3,stats{3}] = glmfit(covar_m3,spikess{3},'poisson');
     lambdaEst{3} = gen_lambda(b_hist{3},covar_m3);
     % prep for lambda plot
-    [b{3},~,~] = glmfit(covar{3},spikes,'poisson');
-    for j = 1:length(covar{2})
+    covar{3} = [x_new,y_new,x_new.^2,y_new.^2,x_new.*y_new,phi_new];
+    [b{3},~,~] = glmfit([xN,yN,xN.^2,yN.^2,xN.*yN,phi],spikes,'poisson');
+    for j = 1:size(covar{3},2)
         lambda{3} = b{3}(j)*covar{3}(:,j) + lambda{3};
     end
     lambda{3} = exp(lambda{3});
@@ -125,13 +127,11 @@ for i = 1:neurons
         % model
         subplot(models,2,j); hold on;
         %% TODO
-        % create lambda w/o history for each model
         % the lambdas could be the same if they correspond to the same
         % variate (check)
-        % use x_new and y_new to calculate the lambda --> same size
         
         %%
-        h_mesh = mesh(x_new,y_new,lambdaEst{j},'AlphaData',0);
+        h_mesh = mesh(x_new,y_new,lambda{j},'AlphaData',0);
         plot3(cos(-pi:1e-2:pi),sin(-pi:1e-2:pi),zeros(size(-pi:1e-2:pi)));
         xlabel('x position [m]'); ylabel('y position [m]');
         % beta
@@ -141,7 +141,11 @@ for i = 1:neurons
         xlim([0 length(b_hist{j})+1]);
         xlabel('\beta number'); ylabel('\beta value');
         % k-s
-        
+        plot_ks(spikess,lambdaEst);
+        cur_title = get(gca, 'Title');
+        title([cur_title.String ': neuron ' num2str(i)]);
+        saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
+
         % 
     end
     

@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% occ_norm_plot(spikes_binned,vxN,vyN,phi,r,n)
+% occ_norm_plot(spikes_binned,vxN,vyN,phi,r)
 % 
 % Outputs: none (produces figures)
 % Inputs:
@@ -9,8 +9,8 @@
 %             phi - movement directions of rat
 %               r - movement speed of rat
 % 
-% This function creates occupancy normalized plots for neuron n using the
-% velocities, movement directions, and speed of the animal. Different
+% This function creates occupancy normalized plots for all neurons using
+% the velocities, movement directions, and speed of the animal. Different
 % models are tested on each parameter vxN, vyN, phi, & r. The R-S plots of
 % each model is plotted on a single figure for each parameter.
 % 
@@ -25,7 +25,7 @@ function occ_norm_plot(spikes_binned,vxN,vyN,phi,r)
 m = 2; % number of models tested
 p = 4; % number of parameters involved
 
-% more variable stuff for efficiency
+% more variable stuff for efficiency-ish
 params{1} = vxN;
 params{2} = vyN;
 params{3} = phi;
@@ -43,8 +43,8 @@ figs = cell(1,m*p);
 % each parameter
 for i = 1:p
     % add/remove lines here based on # of models tested
-    figs{m*i-1} = figure('Name',['ONP: ' names{i} ' ' m_names{1}]);
-    figs{m*i}   = figure('Name',['ONP: ' names{i} ' ' m_names{2}]);
+    figs{m*i-1} = figure('Name',['ONP: ' names{i} ' unimodal']);
+    figs{m*i}   = figure('Name',['ONP: ' names{i} ' multimodal']);
     % each neuron
     for j = 1:10
         test(spikes_binned,params{i},names{i},m_names,j,m,figs,i*m-1);
@@ -84,7 +84,7 @@ b = cell(1,m);
 cov = cell(1,m);
 data_x = min(data):range(data)/80:max(data);
 
-% histogram
+%% histogram
 for i = 0:m-1
     figure(figs{fig_id+i})
     subplot(2,5,n)
@@ -94,6 +94,7 @@ for i = 0:m-1
     ylabel('normalized spike counts');
 end
 
+%% models
 % model 1: linear
 cov{1} = [data];
 b{1} = glmfit(cov{1},spikes_binned(:,n),'poisson');
