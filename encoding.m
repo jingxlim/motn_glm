@@ -22,7 +22,7 @@ ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 saveas(gcf, 'isi.png')
 
 %% generate new covariates
-[Vx,Vy,phi,r] = generate_new_variables(xN,yN,1000);  % raw data
+[vxN,vyN,phi,r] = generate_new_variables(xN,yN,1000);  % raw data
 
 %% classifying cells
 % This needs to be automated, and it turns out that is a hard problem (at
