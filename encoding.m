@@ -82,7 +82,7 @@ for i = neurons
                            b{i,1}(6)*x_new.*y_new);
     lambda_grid{i,1}(find(x_new.^2 + y_new.^2 > 1)) = nan;
     
-    % Model 2: unimodal place cells 1-5
+    % Model 2: multimodal place cells 1-5
     hist = [3:29 88:138];
     hist = [3];
     [spike{i,2},covar{i,2}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,vxN,r,phi.^2);
@@ -98,7 +98,7 @@ for i = neurons
                            b{i,2}(6)*x_new.*y_new);
     lambda_grid{i,2}(find(x_new.^2 + y_new.^2 > 1)) = nan;
     
-    % Model 3: multimodal place cell 7-10
+    % Model 3: unimodal place cell 7-10
     hist = [4:30 96:146];
     hist = [4];
     [spike{i,3},covar{i,3}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,r,phi);
