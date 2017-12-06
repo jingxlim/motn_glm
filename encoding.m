@@ -200,6 +200,7 @@ bar(AIC_store);
 xlim([0 11])
 ylabel('AIC');
 xlabel('Neuron');
+set(gca,'FontSize',16)
 saveas(gcf, [date '-AIC.png'])
 
 figure();
@@ -208,6 +209,7 @@ subplot(1,2,1);
 bar(ks_store');
 xticklabels({'Model 1', 'Model 2', 'Model 3'})
 ylabel('KS statistic');
+set(gca,'FontSize',16)
 
 subplot(1,2,2);
 ks_mm = ks_store(1:5,:);
@@ -231,6 +233,7 @@ hold on
 errorbar(ctr, ydt, ks_std', '.r')
 xticklabels({'Multimodal', 'Neuron 6', 'Unimodal'});
 ylabel('KS statistic');
+set(gca,'FontSize',16)
 saveas(gcf, [date '-KS_statistics.png'])
 
     %% was commented out before
