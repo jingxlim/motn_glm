@@ -49,6 +49,7 @@ for i = 1:p
     for j = 1:10
         test_mods(spikes_binned,params{i},names{i},m_names,j,m,figs,i*m-1);
     end
+    saveas(gcf, ['ONP_' num2str(names{ceil(i/m)}) '_' num2str(m_names{i-2*floor((i-1)/m)}) '.png'])
 end
 
 %% saving figures
@@ -89,9 +90,13 @@ for i = 0:m-1
     figure(figs{fig_id+i})
     subplot(2,5,n)
     bar(data_x,hist(data(ind),data_x)./hist(data,data_x));
-    title(['Neuron ' num2str(n) ', ' name ', ' m_names{i+1}])
-    xlabel(name);
-    ylabel('normalized spike counts');
+    title(['Neuron ' num2str(n)]) % ', ' name ', ' m_names{i+1}])
+    if n==8
+        xlabel(name);
+    end
+    if mod(n,5)==1
+        ylabel('normalized spike counts');
+    end
 end
 
 %% models
@@ -102,7 +107,8 @@ b{1} = glmfit(cov{1},spikes_binned(:,n),'poisson');
 figure(figs{fig_id})
 hold on;
 subplot(2,5,n)
-plot(data_x,exp(b{1}(1)+b{1}(2)*data_x),'r');
+plot(data_x,exp(b{1}(1)+b{1}(2)*data_x),'r','LineWidth',1.5);
+set(gca,'fontsize',20)
 
 % model 2: quad
 cov{2} = [data.^2];
@@ -111,10 +117,11 @@ b{2} = glmfit(cov{2},spikes_binned(:,n),'poisson');
 figure(figs{fig_id+1})
 hold on;
 subplot(2,5,n)
-plot(data_x,exp(b{2}(1)+b{2}(2)*data_x.^2),'r');
+plot(data_x,exp(b{2}(1)+b{2}(2)*data_x.^2),'r','LineWidth',1.5);
+set(gca,'fontsize',20)
 
 %% error calculation: creates m*10 figures
-find_ks(b,cov,spikes_binned,name,n,m);
+% find_ks(b,cov,spikes_binned,name,n,m);
 
 %% other models
 % % model 3
