@@ -199,6 +199,7 @@ figure();
 bar(ks_store');
 xticklabels({'Model 1', 'Model 2', 'Model 3'})
 ylabel('KS statistic');
+saveas(gcf, [date '-KS_statistic.png'])
 
 figure();
 set(gcf,'units','points','position',[100,100,1000,400])
@@ -231,6 +232,7 @@ hold on
 errorbar(ctr, ydt, AIC_std', '.r')
 xticklabels({'Multimodal', 'Neuron 6', 'Unimodal'});
 ylabel('AIC');
+saveas(gcf, [date '-AIC.png'])
 
     %% was commented out before
 %     for n=1:numel(b3)
