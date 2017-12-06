@@ -115,7 +115,7 @@ for i = neurons
     
 end
 
-for i = 1:5
+for i = neurons
     disp(['Plotting neuron ' num2str(i) ' ...'])
     
     %% EVALUATE MODELS
@@ -144,8 +144,10 @@ for i = 1:5
         errorbar(b{i,j},2*stats{i,j}.se);
         xticks(1:length(b{i,j}));
         xlim([0 length(b{i,j})+1]);
+        xticks(0:10:length(b{i,j}));
         xlabel('\beta number'); ylabel('\beta value');
         
+        set(gca,'FontSize',16)
         saveas(gcf, [date '-beta_' num2str(i) '.png'])
         
     end
@@ -166,6 +168,8 @@ for i = 1:5
     plot_ks(ks_spikes,ks_lambda,ks_b,ks_dev);
     cur_title = get(gca, 'Title');
     title([cur_title.String ': neuron ' num2str(i)]);
+    
+    set(gca,'FontSize',16)
     saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
 end
     
