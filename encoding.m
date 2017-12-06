@@ -127,8 +127,7 @@ for i = neurons
     for j = 1:num_model
         
         % plot lambda as a function of position
-        subplot(2,num_model,j); hold on;
-        set(gca,'FontSize',16)        
+        subplot(2,num_model,j); hold on;        
         %% TODO
         % the lambdas could be the same if they correspond to the same
         % variate (check)
@@ -139,15 +138,16 @@ for i = neurons
         hold on;
         plot3(cos(-pi:1e-2:pi),sin(-pi:1e-2:pi),zeros(size(-pi:1e-2:pi)));
         xlabel('x position [m]'); ylabel('y position [m]');
+        set(gca,'FontSize',16)
         
         % plot beta
-        subplot(2,num_model,j+3); hold on;
-        set(gca,'FontSize',16)        
+        subplot(2,num_model,j+3); hold on;        
         errorbar(b{i,j},2*stats{i,j}.se);
         xticks(1:length(b{i,j}));
         xlim([0 length(b{i,j})+1]);
         xticks(0:10:length(b{i,j}));
         xlabel('\beta number'); ylabel('\beta value');
+        set(gca,'FontSize',16)
         
         saveas(gcf, [date '-beta_' num2str(i) '.png'])
         
