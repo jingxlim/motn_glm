@@ -85,14 +85,11 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function test_models(spikes,base,covs,modals,n,p,figs)
 % variables
-% c = length(covs);
-% sep = length(modals);
 m = numel(covs)+1;  % number of models testing = lin+quad+base
 m_add = 2;          % if testing additional models
 m_tot = m + m_add;
 b = cell(1,m_tot);
 cov = cell(1,m_tot);
-% data_x = min(params):range(params)/80:max(params);
 
 %% models
 % base
@@ -113,7 +110,7 @@ for i = 1:m_add
     b{ind} = glmfit(cov{ind},spikes,'poisson');
 end
 %% error calculation: creates m*10 figures
-find_ks3(b,cov,spikes,figs,double(n>5)+1,modals,n,p,m_tot);
+find_ks3(b,cov,spikes,figs,double(n>5)+1,n,p,m_tot);
 
 end
 
@@ -127,7 +124,6 @@ end
 %   spikes - spikes of neuron n
 %   figs - ALL THE FIGURES MWAHAHAHAHAA (all the neurons & parameters)
 %   mode - # representing modality (1=uni, 2=multi)
-%   name - String name of data used
 %   n - neuron #
 %   p - parameter #
 %   m - # of models
@@ -135,7 +131,7 @@ end
 % This function creates the lambdaEst and spikes matrix necessary to call
 % the plot_ks function.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function find_ks3(b,cov,spikes,figs,mode,name,n,p,m)
+function find_ks3(b,cov,spikes,figs,mode,n,p,m)
 % variables
 lambdaEst = cell(1,m);
 spikes_all = cell(1,m);
