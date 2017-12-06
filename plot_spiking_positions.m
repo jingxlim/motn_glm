@@ -28,9 +28,10 @@ addOptional(p,'type',defaultType,checkType);
 
 parse(p,xN,yN,XLocAtSpikes,YLocAtSpikes,varargin{:})
 
+n = numel(XLocAtSpikes);
 if strcmp(p.Results.type,'separate')
 
-    for i=1:numel(XLocAtSpikes)
+    for i=1:n
         psp(i,xN,yN,XLocAtSpikes{i},YLocAtSpikes{i});
     end
 
@@ -38,14 +39,20 @@ elseif strcmp(p.Results.type,'subplot')
 
     figure('Name','Raw Data - Spikes and Path vs Position',...
         'units','normalized','outerposition',[0 0.035 1 0.92]); hold on;
-    for i=1:numel(XLocAtSpikes)
+    for i=1:n
         
-        subplot(numel(XLocAtSpikes)/5, 5, i); hold on;
+        subplot(n/5, 5, i); hold on;
         plot(xN,yN,XLocAtSpikes{i},YLocAtSpikes{i},'r.');
         
         % make pretty
         title(['Neuron ' num2str(i)])
-        xlabel('Normalized x position'); ylabel('Normalized y position');
+        if i==ceil(3*n/4)
+            xlabel('Normalized x position');
+        end
+        if mod(i,n/2)==1
+            ylabel('Normalized y position');
+        end
+    
         pbaspect([1 1 1]);
         set(gca,'fontsize',20)
 

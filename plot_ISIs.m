@@ -17,11 +17,16 @@ for i = 1:n,
     pISI = ISIs{i}(ISIs{i}<=threshold); %Throw out ISIs that are too large (for plotting only)
     subplot(2,5,i); grid on; hold on;
     histogram(pISI,'BinWidth',binwidth);
-    xlabel('Interspike Interval (ms)');
-    ylabel('Number');
+    if i==ceil(3*n/4)
+        xlabel('Interspike Interval (ms)');
+    end
+    if mod(i,n/2)==1
+        ylabel('Spike Count');
+    end
     title(['Neuron ' num2str(i)]);
     set(gca,'fontsize',20)
-
+    xlim([0 600])
+    ylim([0 300])
 end
 set(gca,'fontsize',20)
 % suptitle('Distribution of Interspike Intervals');
