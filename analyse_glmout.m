@@ -15,26 +15,33 @@ load('glm_out-neuron_1');
 
 %% plot betas
 figure(1); clf; hold on;
-set(gcf,'units','points','position',[100,100,1000,400])
-subplot(1,2,1);
+set(gcf,'units','points','position',[100,100,1000,600])
+
+subplot(3,1,1);
+set(gca,'FontSize',16)
 errorbar(b3,2*stats3.se);
-xticks(1:length(b3));
-xlim([0 length(b3)+1]);
-xlabel('\beta number'); ylabel('\beta value');
-subplot(1,2,2);
-plot(b3);
+% xticks(1:length(b3));
+xlim([0 length(b3)]);
 xlabel('\beta number'); ylabel('\beta value');
 
+% subplot(4,1,2);
+% plot(b3);
+% xlim([0 length(b3)]);
+% xlabel('\beta number'); ylabel('\beta value');
+
 %% plot p-values
-figure(2); clf; hold on;
-set(gcf,'units','points','position',[100,100,1000,400])
-subplot(1,2,1); hold on;
+subplot(3,1,2); hold on;
+set(gca,'FontSize',16)
 plot(stats3.p)
+xlim([0 length(stats3.p)]);
 % ylim([0 0.05])
 ylabel('p-values'); xlabel('covariate number');
-subplot(1,2,2); hold on;
-plot(stats3.p(stats3.p<0.05), 'r.')
+subplot(3,1,3); hold on;
+plot(find(stats3.p<0.05),stats3.p(stats3.p<0.05), 'ro')
+plot(find(stats3.p<0.05),stats3.p(stats3.p<0.05), 'b')
+xlim([0 length(stats3.p)]);
 ylabel('p-values'); xlabel('covariate number');
+set(gca,'FontSize',16)
 
 %%  find stretches of significant covariates
 figure(3); clf; hold on;
@@ -43,7 +50,7 @@ h = histogram(L,n);
 xlabel('Stretch number'); ylabel('Length of stretch');
 
 len = sort(h.Values);
-longest = len(end-2);  % non-zero bins
+longest = len(end);  % non-zero bins
 
 ylim([0 longest])
 
@@ -58,3 +65,4 @@ for i=1:numel(stretch_indexes)
 
     hist_dep = covar_index - 5
 end
+set(gca,'FontSize',16)

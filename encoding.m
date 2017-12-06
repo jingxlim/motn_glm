@@ -128,6 +128,7 @@ for i = neurons
         
         % plot lambda as a function of position
         subplot(2,num_model,j); hold on;
+        set(gca,'FontSize',16)        
         %% TODO
         % the lambdas could be the same if they correspond to the same
         % variate (check)
@@ -141,13 +142,13 @@ for i = neurons
         
         % plot beta
         subplot(2,num_model,j+3); hold on;
+        set(gca,'FontSize',16)        
         errorbar(b{i,j},2*stats{i,j}.se);
         xticks(1:length(b{i,j}));
         xlim([0 length(b{i,j})+1]);
         xticks(0:10:length(b{i,j}));
         xlabel('\beta number'); ylabel('\beta value');
         
-        set(gca,'FontSize',16)
         saveas(gcf, [date '-beta_' num2str(i) '.png'])
         
     end
