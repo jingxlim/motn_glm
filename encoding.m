@@ -230,7 +230,7 @@ end
 hold on
 errorbar(ctr, ydt, ks_std', '.r')
 xticklabels({'Multimodal', 'Neuron 6', 'Unimodal'});
-ylabel('AIC');
+ylabel('KS statistic');
 saveas(gcf, [date '-KS_statistics.png'])
 
     %% was commented out before
