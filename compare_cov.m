@@ -155,6 +155,5 @@ hold on;
 anyplot_ks(spikes_all,lambdaEst);
 title(['Neuron ' num2str(n)]);
 set(gca,'fontsize',20)
-% saveas(gcf, ['KS-neuron_' num2str(n) '.png'])
 
 end

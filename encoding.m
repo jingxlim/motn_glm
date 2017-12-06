@@ -68,7 +68,7 @@ for i = neurons
     %% DEFINE MODELS
     % Model 1: neuron 6
     hist = [4:15 96:109 140:146];
-    [spike{i,1},covar{i,1}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
+    [spike{i,1},covar{i,1}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,vyN,phi);
     [b{i,1},dev{i,1},stats{i,1}] = glmfit(covar{i,1},spike{i,1},'poisson');
     lambda{i,1} = gen_lambda(b{i,1},covar{i,1});
     % plot lambda as a function of X and Y position
@@ -83,7 +83,7 @@ for i = neurons
     
     % Model 2: unimodal place cells 1-5
     hist = [3:29 88:138];
-    [spike{i,2},covar{i,2}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi.^2);
+    [spike{i,2},covar{i,2}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,vxN,r,phi.^2);
     [b{i,2},dev{i,2},stats{i,2}] = glmfit(covar{i,2},spike{i,2},'poisson');
     lambda{i,2} = gen_lambda(b{i,2},covar{i,2});
     % plot lambda as a function of X and Y position
@@ -98,7 +98,7 @@ for i = neurons
     
     % Model 3: multimodal place cell 7-10
     hist = [4:30 96:146];
-    [spike{i,3},covar{i,3}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,phi);
+    [spike{i,3},covar{i,3}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,r,phi);
     [b{i,3},dev{i,3},stats{i,3}] = glmfit(covar{i,3},spike{i,3},'poisson');
     lambda{i,3} = gen_lambda(b{i,3},covar{i,3});
     % plot lambda as a function of X and Y position
