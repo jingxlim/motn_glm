@@ -196,43 +196,42 @@ for i = neurons
 end
 
 figure();
-bar(ks_store');
-xticklabels({'Model 1', 'Model 2', 'Model 3'})
-ylabel('KS statistic');
-saveas(gcf, [date '-KS_statistic.png'])
-
-figure();
-set(gcf,'units','points','position',[100,100,1000,400])
-subplot(1,2,1);
 bar(AIC_store);
 xlim([0 11])
 ylabel('AIC');
 xlabel('Neuron');
+saveas(gcf, [date '-AIC.png'])
+
+figure();
+set(gcf,'units','points','position',[100,100,1000,400])
+subplot(1,2,1);
+bar(ks_store');
+xticklabels({'Model 1', 'Model 2', 'Model 3'})
+ylabel('KS statistic');
 
 subplot(1,2,2);
+ks_mm = ks_store(1:5,:);
+ks_six = ks_store(6,:);
+ks_um = ks_store(7:10,:);
 
-AIC_mm = AIC_store(1:5,:);
-AIC_six = AIC_store(6,:);
-AIC_um = AIC_store(7:10,:);
-
-AIC_means = [mean(AIC_mm,1);...
-             mean(AIC_six,1);...
-             mean(AIC_um,1)]
-AIC_std = [std(AIC_mm,1);...
+ks_means = [mean(ks_mm,1);...
+             mean(ks_six,1);...
+             mean(ks_um,1)]
+ks_std = [std(ks_mm,1);...
            [0, 0, 0];...
-           std(AIC_um,1)]         
+           std(ks_um,1)]         
 ctrs = 1:3       
-hBar = bar(ctrs,AIC_means);
+hBar = bar(ctrs,ks_means);
 
-for k1 = 1:size(AIC_means,2)
+for k1 = 1:size(ks_means,2)
     ctr(k1,:) = bsxfun(@plus, hBar(1).XData, [hBar(k1).XOffset]');
     ydt(k1,:) = hBar(k1).YData;
 end
 hold on
-errorbar(ctr, ydt, AIC_std', '.r')
+errorbar(ctr, ydt, ks_std', '.r')
 xticklabels({'Multimodal', 'Neuron 6', 'Unimodal'});
 ylabel('AIC');
-saveas(gcf, [date '-AIC.png'])
+saveas(gcf, [date '-KS_statistics.png'])
 
     %% was commented out before
 %     for n=1:numel(b3)
