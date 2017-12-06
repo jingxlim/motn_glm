@@ -68,6 +68,7 @@ for i = neurons
     %% DEFINE MODELS
     % Model 1: neuron 6
     hist = [4:15 96:109 140:146];
+    hist = [4];
     [spike{i,1},covar{i,1}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,vyN,phi);
     [b{i,1},dev{i,1},stats{i,1}] = glmfit(covar{i,1},spike{i,1},'poisson');
     lambda{i,1} = gen_lambda(b{i,1},covar{i,1});
@@ -83,6 +84,7 @@ for i = neurons
     
     % Model 2: unimodal place cells 1-5
     hist = [3:29 88:138];
+    hist = [3];
     [spike{i,2},covar{i,2}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,vxN,r,phi.^2);
     [b{i,2},dev{i,2},stats{i,2}] = glmfit(covar{i,2},spike{i,2},'poisson');
     lambda{i,2} = gen_lambda(b{i,2},covar{i,2});
@@ -98,6 +100,7 @@ for i = neurons
     
     % Model 3: multimodal place cell 7-10
     hist = [4:30 96:146];
+    hist = [4];
     [spike{i,3},covar{i,3}] = hist_dep(hist,spikes,xN,yN,xN.^2,yN.^2,xN.*yN,r,phi);
     [b{i,3},dev{i,3},stats{i,3}] = glmfit(covar{i,3},spike{i,3},'poisson');
     lambda{i,3} = gen_lambda(b{i,3},covar{i,3});
@@ -115,13 +118,19 @@ for i = neurons
     
 end
 
+%% EVALUATE MODELS
+
+ks_store = zeros(length(neurons),num_model);
+AIC_store = zeros(length(neurons),num_model);
+
 for i = neurons
     disp(['Plotting neuron ' num2str(i) ' ...'])
     
-    %% EVALUATE MODELS
-    
     figure('units','normalized','outerposition',[0 0.035 1 0.92]);
     suptitle(['Cell ' num2str(i)]);
+    
+    bottom = min(min(min(min(lambda_grid{i,1})),min(min(lambda_grid{i,2}))),min(min(lambda_grid{i,3})));
+    top  = max(max(max(max(lambda_grid{i,1})),max(max(lambda_grid{i,2}))),max(max(lambda_grid{i,3})));
 
     % Model subplots w/beta subplots below
     for j = 1:num_model
@@ -137,6 +146,10 @@ for i = neurons
         set(h_mesh,'AlphaData',0);
         hold on;
         plot3(cos(-pi:1e-2:pi),sin(-pi:1e-2:pi),zeros(size(-pi:1e-2:pi)));
+        caxis manual
+        caxis([bottom top]);
+        colorbar;
+
         xlabel('x position [m]'); ylabel('y position [m]');
         set(gca,'FontSize',16)
         
@@ -145,7 +158,7 @@ for i = neurons
         errorbar(b{i,j},2*stats{i,j}.se);
         xticks(1:length(b{i,j}));
         xlim([0 length(b{i,j})+1]);
-        xticks(0:10:length(b{i,j}));
+        if length(b{i,j})>20    xticks(0:10:length(b{i,j}));    end
         xlabel('\beta number'); ylabel('\beta value');
         set(gca,'FontSize',16)
         
@@ -166,14 +179,61 @@ for i = neurons
     ks_b{1} = b{i,1};
     ks_b{2} = b{i,2};
     ks_b{3} = b{i,3};
-    plot_ks(ks_spikes,ks_lambda,ks_b,ks_dev);
+    
+    [KS_stat, AIC_stat] = plot_ks(ks_spikes,ks_lambda,ks_b,ks_dev);
+    ks_store(i,1) = KS_stat(1);
+    ks_store(i,2) = KS_stat(2);
+    ks_store(i,3) = KS_stat(3);
+    AIC_store(i,1) = AIC_stat(1);
+    AIC_store(i,2) = AIC_stat(2);
+    AIC_store(i,3) = AIC_stat(3);
+    
     cur_title = get(gca, 'Title');
     title([cur_title.String ': neuron ' num2str(i)]);
     
-    set(gca,'FontSize',16)
+    set(gca,'FontSize',14)
     saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
 end
-    
+
+figure();
+bar(ks_store');
+xticklabels({'Model 1', 'Model 2', 'Model 3'})
+ylabel('KS statistic');
+saveas(gcf, [date '-KS_statistic.png'])
+
+figure();
+set(gcf,'units','points','position',[100,100,1000,400])
+subplot(1,2,1);
+bar(AIC_store);
+xlim([0 11])
+ylabel('AIC');
+xlabel('Neuron');
+
+subplot(1,2,2);
+
+AIC_mm = AIC_store(1:5,:);
+AIC_six = AIC_store(6,:);
+AIC_um = AIC_store(7:10,:);
+
+AIC_means = [mean(AIC_mm,1);...
+             mean(AIC_six,1);...
+             mean(AIC_um,1)]
+AIC_std = [std(AIC_mm,1);...
+           [0, 0, 0];...
+           std(AIC_um,1)]         
+ctrs = 1:3       
+hBar = bar(ctrs,AIC_means);
+
+for k1 = 1:size(AIC_means,2)
+    ctr(k1,:) = bsxfun(@plus, hBar(1).XData, [hBar(k1).XOffset]');
+    ydt(k1,:) = hBar(k1).YData;
+end
+hold on
+errorbar(ctr, ydt, AIC_std', '.r')
+xticklabels({'Multimodal', 'Neuron 6', 'Unimodal'});
+ylabel('AIC');
+saveas(gcf, [date '-AIC.png'])
+
     %% was commented out before
 %     for n=1:numel(b3)
 %         plot(n,b3(n),'*','DisplayName',num2str(stats3.p(n)));

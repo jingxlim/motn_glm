@@ -11,7 +11,8 @@ clr;
 % 171130-glm_out-neuron_8.mat
 % 171130-glm_out-neuron_9.mat
 % 171130-glm_out-neuron_10.mat
-load('glm_out-neuron_1');
+datafile = 'glm_out-neuron_1'
+load(datafile);
 
 %% plot betas
 figure(1); clf; hold on;
@@ -44,6 +45,8 @@ xlim([0 length(stats3.p)]);
 ylabel('p-values'); xlabel('covariate number');
 set(gca,'FontSize',16)
 
+saveas(gcf, [datafile 'betas.png'])
+
 %%  find stretches of significant covariates
 figure(2); clf; hold on;
 set(gcf,'units','points','position',[100,100,1000,400])
@@ -75,3 +78,5 @@ for i=1:numel(stretch_indexes)
 
     hist_dep = covar_index - 5
 end
+
+saveas(gcf, [datafile 'stretch.png'])
