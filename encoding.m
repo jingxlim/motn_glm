@@ -22,7 +22,7 @@ ISIs = plot_ISIs(spikes_binned,ISI_threshold,2);
 saveas(gcf, 'isi.png')
 
 %% generate new covariates
-[Vx,Vy,phi,r] = generate_new_variables(xN,yN,1000);  % raw data
+[vxN,vyN,phi,r] = generate_new_variables(xN,yN,1000);  % raw data
 
 %% classifying cells
 % This needs to be automated, and it turns out that is a hard problem (at
@@ -115,7 +115,7 @@ for i = neurons
     
 end
 
-for i = 1:5
+for i = neurons
     disp(['Plotting neuron ' num2str(i) ' ...'])
     
     %% EVALUATE MODELS
@@ -127,7 +127,7 @@ for i = 1:5
     for j = 1:num_model
         
         % plot lambda as a function of position
-        subplot(2,num_model,j); hold on;
+        subplot(2,num_model,j); hold on;        
         %% TODO
         % the lambdas could be the same if they correspond to the same
         % variate (check)
@@ -138,13 +138,16 @@ for i = 1:5
         hold on;
         plot3(cos(-pi:1e-2:pi),sin(-pi:1e-2:pi),zeros(size(-pi:1e-2:pi)));
         xlabel('x position [m]'); ylabel('y position [m]');
+        set(gca,'FontSize',16)
         
         % plot beta
-        subplot(2,num_model,j+3); hold on;
+        subplot(2,num_model,j+3); hold on;        
         errorbar(b{i,j},2*stats{i,j}.se);
         xticks(1:length(b{i,j}));
         xlim([0 length(b{i,j})+1]);
+        xticks(0:10:length(b{i,j}));
         xlabel('\beta number'); ylabel('\beta value');
+        set(gca,'FontSize',16)
         
         saveas(gcf, [date '-beta_' num2str(i) '.png'])
         
@@ -166,6 +169,8 @@ for i = 1:5
     plot_ks(ks_spikes,ks_lambda,ks_b,ks_dev);
     cur_title = get(gca, 'Title');
     title([cur_title.String ': neuron ' num2str(i)]);
+    
+    set(gca,'FontSize',16)
     saveas(gcf, [date '-KS-neuron_' num2str(i) '.png'])
 end
     
