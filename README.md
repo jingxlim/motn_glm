@@ -16,6 +16,7 @@ EN.580.439 Models of the Neuron
 
 ![alt text](figs/readme/model_3.gif "model 3")
 
+
 <img src="figs/readme/side-by-side.png" align="center">
 
 ## Conclusions <img src="figs/171205-224634-AIC.png" width="438" height="328" align="right">
