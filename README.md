@@ -2,7 +2,11 @@
 EN.580.439 Models of the Neuron
 
 ## Model details
-- Constructed 3 GLMs after classifying cells into 3 groups based on their spatial and temporal firing patterns
+- Constructed 3 GLMs after initial classification of cells into 3 groups based on their spatial and temporal firing patterns
+- A data-driven approach was used in determination of each model's covariates
+- All GLMs have all positional covariates
+- Each GLM has their own velocity, speed and direction covariates
+- Each GLM has their own history dependence
 
 **Model 1**
 
