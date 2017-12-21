@@ -18,8 +18,7 @@ EN.580.439 Models of the Neuron
 
 <img src="figs/readme/side-by-side.png" align="center">
 
-## Conclusions
-<img src="figs/171205-224634-AIC.png" width="438" height="328" align="center">
+## Conclusions <img src="figs/171205-224634-AIC.png" width="438" height="328" align="right">
 - Model 3 performed slightly better when comparing relative goodness-of-fit due to low number of covariates
 - However, all three models are very similar
 - Positional covariates had the most explanatory power
