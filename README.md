@@ -1,36 +1,17 @@
-# README #
+# Generalised linear modeling
+EN.580.439 Models of the Neuron
 
-The TMNT are back for Project 2! Unless we get a new name idk.
+## Model details
+- Constructed 3 GLMs after classifying cells into 3 groups based on their spatial and temporal firing patterns
 
-### What is this repository for? ###
+**Model 1**
+<img src="figs/readme/model_1.gif" align="left">
+**Model 2**
+<img src="figs/readme/model_2.gif" align="left">
+**Model 3**
+<img src="figs/readme/model_3.gif" align="left">
 
-* Saucy remarks about highly gifted people
-* Baltimore food recommendations
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### Rough classifications of cells ###
-These are based on spike positions. One thing to consider is how often the rat was in the position bc that would affect spike count.
-
-* Cell 1: Grid cell (5 fields)
-* Cell 2: Grid cell (3 fields)
-* Cell 3: MM (multimodal place cells)
-* Cell 4: Grid and MM
-* Cell 5: MM
-* Cell 6: Place + border conjuctive cell
-* Cell 7: Place + border conjunctive cell
-* Cell 8: Place cell (with field in middle)
-* Cell 9: Place cell
-* Cell 10: MM
-
-### THE PLAN ###
-
-* classify cells
-* mess around w/different covariates to learn how they work
-* match up the covariate sets to the cell groups & refine
-* also Simon do you understand how glmfit actually works bc that would be helpful. Jing and I are confused.
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+## Conclusions
+- Model 1 performed best when comparing relative goodness-of-fit due to low number of covariates
+- Positional covariates had the most explanatory power
+- All the neurons showed some history dependence between 5-20 ms in the past as well as around 90-140 ms
