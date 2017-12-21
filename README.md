@@ -19,6 +19,8 @@ EN.580.439 Models of the Neuron
 <img src="figs/readme/side-by-side.png" align="center">
 
 ## Conclusions
-- Model 1 performed best when comparing relative goodness-of-fit due to low number of covariates
+<img src="figs/171205-224634-AIC.png" align="center">
+- Model 3 performed slightly better when comparing relative goodness-of-fit due to low number of covariates
+- However, all three models are very similar
 - Positional covariates had the most explanatory power
 - All the neurons showed some history dependence between 5-20 ms in the past as well as around 90-140 ms
